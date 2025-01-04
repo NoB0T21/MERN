@@ -1,0 +1,16 @@
+{
+  "name": "glidex",
+  "version": "1.0.0",
+  "description": "GlideX is your go-to ride-hailing app for smooth, effortless travel. Designed for convenience, it offers real-time tracking, instant bookings, and secure payments, ensuring a seamless journey every time. Glide through your city with GlideX!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aryan",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  }
+}
