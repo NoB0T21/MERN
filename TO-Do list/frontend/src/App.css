@@ -1,0 +1,18 @@
+@import "tailwindcss";
+#root {
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+#trash{
+  color: rgb(177, 71, 71);
+  cursor: pointer;
+}
+#done{
+  color: rgb(126, 208, 33);
+  cursor: pointer;
+}
+#done1{
+  color: rgb(147, 64, 206);
+  cursor: pointer;
+}

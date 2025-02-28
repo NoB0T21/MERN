@@ -1,18 +1,17 @@
 import { useState } from 'react'
 import './App.css'
 import Header from './components/Header'
-import Posts from './components/Posts/Posts'
 import Form from './components/Form'
+import List from './components/Lists'
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <Header/>
-      <div className='flex justify-between mx-30 h-full '>
-        <Posts/>
+      <div className='flex flex-col justify-center items-center gap-5 m-10'>
+        <Header/>
         <Form/>
+        <List/>
       </div>
     </>
   )

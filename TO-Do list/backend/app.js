@@ -1,18 +1,16 @@
 import express from 'express';
 const app = express();
-import cors from 'cors';
-
 import dotenv from 'dotenv';
 dotenv.config();
-import connectToDB from './DB/mongoose_db.js';
-connectToDB();
-
-import postRouter from './routes/posts.routes.js';
+import connectToDb from './DB/DB.js';
+connectToDb();
+import cors from 'cors';
+import taskRoutes from './routes/task.routes.js';
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use('/', postRouter);
+app.use('/',taskRoutes);
 
-export default app
+export default app;
