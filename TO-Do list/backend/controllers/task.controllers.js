@@ -1,4 +1,4 @@
-import { createTask, showTask, updateTask } from "../services/task.service.js";
+import { createTask, showTask, updateTask, deleteTask } from "../services/task.service.js";
 
 export const showTasks = async (req, res) => {
     const tasks = await showTask();
@@ -18,13 +18,25 @@ export const createTasks = async (req, res, next) => {
 }
 
 export const updateTasks = async (req, res, next) => {
-    const {id} = req.params;
+    const id  = req.params.id;
     if(!id){
         return res.status(400).json({message: "uid not found"    
         });
     }
     const user = await updateTask({
-        _id,
+        id,
+    })
+    res.json(user);
+}
+
+export const deleteTasks = async (req, res, next) => {
+    const id  = req.params.id;
+    if(!id){
+        return res.status(400).json({message: "uid not found"    
+        });
+    }
+    const user = await deleteTask({
+        id,
     })
     res.json(user);
 }

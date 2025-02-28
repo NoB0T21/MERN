@@ -14,9 +14,8 @@ const Form = () => {
         const response = await axios.post(`${import.meta.env.VITE_URL}/createtask`, todoData)
         const Data = response.data
         
-
-        setTask('')
         location.reload()
+        setTask('')
     }
   return (
     <div className=' bg-zinc-700 w-1/3 rounded-md p-2'>
