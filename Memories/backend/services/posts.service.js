@@ -1,12 +1,14 @@
 import postModel from '../models/post.models.js'
 
-export const createPost = async ({creator, title, message, tags, file}) => {
+export const createPost = async ({creator, title, message, tags, path, originalname, imageurl}) => {
     const post = postModel.create({
         creator,
         title,
         message,
         tags,
-        file
+        path,
+        originalname,
+        imageurl,
     })
     return post;
 }

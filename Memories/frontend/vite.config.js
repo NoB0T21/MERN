@@ -7,7 +7,4 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss(),
   ],
-  server: {
-    "proxy": {'/createPost': "http://localhost:3000"},
-  }
 })

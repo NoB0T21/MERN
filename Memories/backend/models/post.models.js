@@ -21,6 +21,15 @@ const postSchema = mongoose.Schema({
         type:Date,
         default: Date.now(),
     },
+    path:{
+        type: String,
+    },
+    originalname:{
+        type: String,
+    },
+    imageuri:{
+        type: String,
+    }
 })
 
 const post = mongoose.model('post', postSchema);

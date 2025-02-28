@@ -6,13 +6,22 @@ const Form = () => {
     const [title, setTitle] = useState('')
     const [message, setMessage] = useState('')
     const [tags, setTags] = useState('')
-    const [file, setFile] = useState('')
+    const [file, setFile] = useState([])
+    const [data, setData] = useState('')
 
     const submitHandler = async (e) => {
         e.preventDefault()
 
-        const response = await axios.post(`/createPost`)
-           const data = response.data
+        const posts = {
+            creator: creator,
+            title: title,
+            message: message,
+            tags: tags,
+            file: file,
+          }
+        axios.post(`http://localhost:3000/createpost`,posts)
+        .then(result => {setData(result.data)})
+        .catch(err => console.log(err))
           console.log(data)
 
 
@@ -20,14 +29,14 @@ const Form = () => {
         setTitle('')
         setMessage('')
         setTags('')
-        setFile('')
+        setFile([])
     }
     const clear = () => {
         setCreator('')
         setTitle('')
         setMessage('')
         setTags('')
-        setFile('')
+        setFile([])
     }
 
   return (
@@ -38,7 +47,7 @@ const Form = () => {
         <input onChange={(e) => {setTitle(e.target.value)}} value={title} className="block w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="title" placeholder="Title"/>
         <input onChange={(e) => {setMessage(e.target.value)}} value={message} className="block w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="message" placeholder="Message"/>
         <input onChange={(e) => {setTags(e.target.value)}} value={tags} className="block w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="tags" placeholder="Tags"/>
-        <input onChange={(e) => {setFile(e.target.value)}} value={file} className="block w-[97%] py-3 px-4 mx-[10px] rounded-md bg-zinc-800" type="file" name="file"/>
+        <input onChange={(e) => {setFile(e.target.files)}} className="block w-[97%] py-3 px-4 mx-[10px] rounded-md bg-zinc-800" type="file" name="file"/>
         <button className='bg-indigo-600 py-3 px-4 mx-[10px] rounded-md hover:outline-2 outline-indigo-600 focus:indigo-700'>Submit</button>
       </form>
         <button onClick={clear} className='bg-red-400 py-1 px-4 mx-[10px] rounded-md hover:outline-2 outline-red-400 focus:bg-red-500'>Clear</button>
