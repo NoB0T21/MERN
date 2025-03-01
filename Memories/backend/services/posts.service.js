@@ -1,19 +1,43 @@
-import postModel from '../models/post.models.js'
+const postModel = require('../models/post.models');
 
-export const createPost = async ({creator, title, message, tags, path, originalname, imageurl}) => {
-    const post = postModel.create({
+module.exports.createFile = async({creator, title, message, tags, path, originalname, ImageUrl}) => {
+    if(!creator || !title || !message || !tags ||!path || !originalname || !ImageUrl ){
+        throw new Error("Require all Fields");
+    }
+    const file =  await postModel.create({
         creator,
         title,
         message,
         tags,
         path,
         originalname,
-        imageurl,
-    })
-    return post;
+        ImageUrl,
+    });
+    return file;
 }
 
-export const getPosts = async (req,res) => {
-    const posts = postModel.find()
-    return posts;
+module.exports.getFile = async() => {
+    const file =  await postModel.find();
+    return file;
+}
+
+module.exports.getFiles = async({userId}) => {
+    if(!userId){
+        throw new Error("Require all Fields");
+    }
+    const file =  await postModel.findOne({_id: userId});
+    return file;
+}
+
+module.exports.updateFile = async({userId, creator, title, message, tags}) => {
+    if(!userId){
+        throw new Error("Require all Fields");
+    }
+    const file =  await postModel.findOneAndUpdate({_id: userId},{
+        creator,
+        title,
+        message,
+        tags,
+    }, {new: true});
+    return file;
 }

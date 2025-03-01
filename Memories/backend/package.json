@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "Its a social media app were people create posts and gets like ",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "start": "npx nodemon server.js"
   },

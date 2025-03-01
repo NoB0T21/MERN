@@ -1,66 +1,80 @@
-import { validationResult } from 'express-validator';
-import {createPost, getPosts} from '../services/posts.service.js';
+const supabase = require('../DB/supabase');
+const postServices = require('../services/posts.service');
+const multer = require('multer');
+const uuid = require('uuid-v4');
+const upload =  multer({ storage: multer.memoryStorage() });
 
-import supabase from '../DB/supabase.js';
-import multer from 'multer';
-const upload = multer({storage: multer.memoryStorage()});
-import uuid from 'uuid-v4';
-
-export const getPost = async (req,res) => {
-    const post = await getPosts();
-    res.json(post)
-}
-
-export const createPosts = [
+module.exports.uploadFile =[
     upload.single('file'),
-    async (req,res) => {
-        const {file} = req;
-        if(!file){
-            return res.status(404).json({error: 'no such File Uploaded'})
+    async (req, res) => {
+        const { file } = req;
+
+        if (!file) {
+            return res.status(400).json({ error: 'No file uploaded' });
         }
         const files = file.originalname;
-        const refile = files.split(" ").join("");
-        const uniqueFilename = `${uuid()}-${refile}`;
+        const refiles = files.split(" ").join("");
+         const uniqueFilename = `${uuid()}-${refiles}`;
 
-        const {data, error} = await supabase
+        const { data, error } = await supabase
             .storage
-            .from('image')
-            .upload(uniqueFilename, file.buffer,{
+            .from('images')
+            .upload(uniqueFilename, file.buffer, {
                 contentType: file.mimetype,
                 cacheControl: '3600',
                 upsert: false,
             })
-        if(error){
-            return res.status(404).json({error: error.message});
+    
+        if (error) {
+            return res.status(400).json({ error: error.message });
         }
+        getFilePath();
 
-        getFilepath();
-        async function getFilepath() {
-            const{data,patherr} = await supabase
+        async function getFilePath() {
+            const { data, urlError } = await supabase
                 .storage
-                .from('image')
+                .from('images')
                 .getPublicUrl(`${uniqueFilename}`);
-            if(patherr){
-                return res.status(404).json({error: patherr.message});
+
+            if (urlError) {
+                throw urlError;
             }
-        }
-
-
-        const err = validationResult(req);
-        if(!err.isEmpty()){
-            return res.status(400).json({message: 'Validation failed', errors: err.array()})
-        }
 
         const {creator, title, message, tags} = req.body;
-        const post = await createPost({
+        const newFile = await postServices.createFile({
             creator,
             title,
             message,
             tags,
             path: uniqueFilename,
             originalname: file.originalname,
-            imageurl: file.publicUrl
-        })
-        res.status(201).json(post)
+            ImageUrl: data.publicUrl,
+        });
+        }
     }
 ]
+
+module.exports.showFile = 
+    async (req, res) => {
+        const userPosts = await postServices.getFile();
+        res.json(userPosts);
+    }
+
+module.exports.getPost = async(req,res) => {
+    userId = req.params.id;
+    const userPost = await postServices.getFiles({userId});
+    res.json(userPost);
+}
+module.exports.updatePost =
+    async (req, res) => {
+        userId = req.params.id;
+        const {creator, title, message, tags} = req.body;
+        
+        const post = await postServices.updateFile({
+            userId,
+            creator,
+            title,
+            message,
+            tags,
+        });
+    }

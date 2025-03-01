@@ -1,14 +1,12 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import {body} from 'express-validator'
 
-import { getPost , createPosts } from '../controllers/posts.js';
 
-router.get('/posts', getPost)
-router.post('/createpost',
-    body('creator').isLength({min: 3}).withMessage('Creator must be at least 3 characters long'),
-    body('title').isLength({min: 3}).withMessage('Title must be at least 3 characters long'),
-    body('message').isLength({min: 3}).withMessage('Message must be at least 3 characters long'),
-    createPosts)
+const postController = require('../controllers/posts');
 
-export default router;
+router.get('/home', postController.showFile)
+router.post('/upload',postController.uploadFile);
+router.get('/edit/:id',postController.getPost)
+router.post('/update/:id',postController.updatePost)
+
+module.exports = router;

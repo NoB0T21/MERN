@@ -1,13 +1,14 @@
-import mongoose, { now } from "mongoose";
+const mongoose = require('mongoose');
+const formatDate = require('./time')
 
-const postSchema = mongoose.Schema({
+const fileSchema = mongoose.Schema({
+    creator: {
+        type:String,
+    },
     title: {
         type:String,
     },
     message: {
-        type:String,
-    },
-    creator: {
         type:String,
     },
     tags: [{
@@ -17,9 +18,9 @@ const postSchema = mongoose.Schema({
         type:Number,
         default: 0,
     },
-    createdAt: {
-        type:Date,
-        default: Date.now(),
+    createdAt: { 
+        type: String, 
+        default: formatDate(new Date().toISOString())
     },
     path:{
         type: String,
@@ -27,11 +28,11 @@ const postSchema = mongoose.Schema({
     originalname:{
         type: String,
     },
-    imageuri:{
+    ImageUrl:{
         type: String,
-    }
-})
+    },
+});
 
-const post = mongoose.model('post', postSchema);
+const posts = mongoose.model('posts', fileSchema);
 
-export default post;
+module.exports = posts;

@@ -1,21 +1,31 @@
-import { useState } from 'react'
+
+import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import './App.css'
-import Header from './components/Header'
+import Edit from './components/pages/Edit'
+import Home from './components/pages/Home'
 import Posts from './components/Posts/Posts'
 import Form from './components/Form'
 
-function App() {
-  const [count, setCount] = useState(0)
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home/>,
+    children: [
+      {
+        path: '/',
+        element: [<Posts/>,<Form/>],
+         
+      },
+      {
+        path: '/edit/:_id',
+        element: <Edit/>,
+      },
+    ]
+  }
+])
 
-  return (
-    <>
-      <Header/>
-      <div className='flex justify-between mx-30 h-full '>
-        <Posts/>
-        <Form/>
-      </div>
-    </>
-  )
+function App() {
+  return <RouterProvider router={router} />;
 }
 
 export default App

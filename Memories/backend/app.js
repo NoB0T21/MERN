@@ -1,18 +1,19 @@
-import express from 'express';
+const express = require('express');
 const app = express();
-import cors from 'cors';
+const cors = require('cors')
 
-import dotenv from 'dotenv';
+const dotenv = require("dotenv");
 dotenv.config();
-import connectToDB from './DB/mongoose_db.js';
+const connectToDB = require('./DB/mongoose_db');
 connectToDB();
 
-import postRouter from './routes/posts.routes.js';
+const homeRouter = require('./routes/posts.routes')
 
-app.use(cors());
+
+app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
-app.use('/', postRouter);
+app.use('/', homeRouter);
 
-export default app
+module.exports = app;
