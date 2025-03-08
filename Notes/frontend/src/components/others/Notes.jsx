@@ -1,9 +1,9 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 
+
 const Notes = () => {
   return (
-    <div>
         <div className="tasks w-full flex gap-6 p-10">
                 
             <div className="task w-72 px-3 py-4 flex flex-col justify-start items-center rounded-md bg-zinc-800 hover:bg-zinc-700  hover:w-75 transition-all duration-500 ease-in-out">
@@ -21,7 +21,6 @@ const Notes = () => {
             </div>
             <h2 class="text-zinc-600">no task here</h2>
         </div>
-    </div>
   )
 }
 

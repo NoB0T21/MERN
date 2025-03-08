@@ -1,17 +1,19 @@
-import { useState } from 'react'
+import { lazy, Suspense } from 'react'
 import './App.css'
 import Header from './components/Header'
 import Form from './components/Form'
-import List from './components/Lists'
+const List = lazy(() => import('./components/Lists'))
 
 function App() {
-
+  
   return (
     <>
       <div className='flex flex-col justify-center items-center gap-5 m-10'>
         <Header/>
-        <Form/>
-        <List/>
+        <Form />
+        <Suspense>
+          <List/>
+        </Suspense>
       </div>
     </>
   )

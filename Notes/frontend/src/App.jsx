@@ -2,9 +2,9 @@ import {createBrowserRouter,RouterProvider} from 'react-router-dom'
 import './App.css'
 
 import Home from './components/Home'
-import Notes from './components/others/Notes'
-import Edit from './components/others/Edit'
-import Read from './components/Read'
+import NotesAnime from './components/others/NotesAnime'
+import EditAnime from './components/others/EditAnime'
+import ReadAnime from './components/ReadAnime'
 
 const router = createBrowserRouter([
   {
@@ -12,18 +12,18 @@ const router = createBrowserRouter([
     element: <Home/>,
     children:[
       {
-        path: '/',
-        element: <Notes/>
+        path: 'notes',
+        element: <NotesAnime/>
       },
       {
-        path: '/edit',
-        element: <Edit/>
+        path: 'edit',
+        element: <EditAnime/>
       },
     ]
   },
   {
     path: '/read',
-    element: <Read/>
+    element: <ReadAnime/>
   }
 ])
 

@@ -9,7 +9,7 @@ const Read = () => {
                     <path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
                   </svg>Home</Link>
             <div className='w-full flex justify-center'>
-            <div className="main w-2/3 mx-5 my-10 text-wrap flex flex-col justify-between cursor-default w-1/2 min-auto bg-zinc-800 rounded-xl p-8 text-white">
+            <div className="main w-2/3 mx-5 my-10 text-wrap flex flex-col justify-between cursor-default min-auto bg-zinc-800 rounded-xl p-8 text-white">
                 <div>
                     <h1 className="w-full text-2xl tracking-tighter flex justify-center items-center"> name </h1>
                     <p className="w-full text-xl mt-3">content</p> 
