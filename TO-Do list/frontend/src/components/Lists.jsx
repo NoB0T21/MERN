@@ -9,7 +9,7 @@ const Lists = () => {
   const [todoData, setTodoData] = useContext(TodoContext)
   
   return (
-    <div className='bg-zinc-700 w-1/3 rounded-md p-2 flex flex-col justify-center items-center overflow-clip'>
+    <div className='bg-zinc-700 w-2/3 max-w-95 rounded-md p-2 flex flex-col justify-center items-center overflow-clip'>
       <Suspense fallback={<BeatLoader/>}>
         {
           todoData.length === 0 

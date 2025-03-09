@@ -13,7 +13,7 @@ const useTodo = (setTodoData) => {
     const update = async (taskId) => {
         try {
             await axios.post(`${import.meta.env.VITE_URL}/update/${taskId}`)
-            getTodo(setTodoData)
+            getTodo()
         }catch (err) {
             console.log(err);
         }
@@ -22,7 +22,8 @@ const useTodo = (setTodoData) => {
     const deleteTodo = async (taskId) => {
         try {
             axios.post(`${import.meta.env.VITE_URL}/delete/${taskId}`)
-            getTodo(setTodoData)
+            getTodo()
+            getTodo()
         }catch (err) {
             console.log(err);
         }
@@ -32,7 +33,7 @@ const useTodo = (setTodoData) => {
             try{
                 await axios.post(`${import.meta.env.VITE_URL}/createtask`, task)
                 setTask('')
-                getTodo(setTodoData)
+                getTodo()
             }catch(error){
                 console.log(error.message)
             }
