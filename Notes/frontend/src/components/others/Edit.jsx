@@ -1,8 +1,21 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import {Link, useParams} from 'react-router-dom'
+import {api} from '../../utils/api.js'
 
 const Edit = () => {
-  return (
+    const [note, setNote] = useState({})
+    const params = useParams()
+    
+    const data = async () =>  {
+        const dd = await api.get(`/read/${params._id}`)
+        setNote(dd.data)
+    }
+    
+    useEffect(()=>{
+        data()
+    },[])
+    console.log(note)
+    return (
     <div className="w-full flex  justify-start gap-6 py-10">
             <Link className="group text-cyan-500 hover:text-cyan-300 text-md hover:text-xl flex flex-row justify-start items-start mb-5 transition-all duration-500 ease-in-out" to="/">
                 <svg width={24} height={24} fill="currentColor" className="bi bi-arrow-bar-left" viewBox="0 0 16 16">
@@ -10,8 +23,8 @@ const Edit = () => {
                   </svg>Home</Link>
             <div className="main mx-5 text-wrap flex flex-col justify-between cursor-default w-1/2 min-auto bg-zinc-800 rounded-xl p-8 text-white">
                 <div>
-                    <h1 className="w-full text-2xl tracking-tighter flex justify-center items-center"> name </h1>
-                    <p className="w-full text-xl mt-3">content</p> 
+                    <h1 className="w-full text-2xl tracking-tighter flex justify-center items-center"> {note.title} </h1>
+                    <p className="w-full text-xl mt-3">{note.details}</p> 
                 </div>
                 <div className="w-full flex justify-end items-center">
                     <Link className="group1 text-zinc-400 hover:text-yellow-400 text-md hover:text-xl flex flex-col m-2 justify-start items-center transition-all duration-500 ease-in-out" to="">
