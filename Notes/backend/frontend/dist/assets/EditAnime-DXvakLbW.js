@@ -1,2 +1,0 @@
-const __vite__mapDeps=(i,m=__vite__mapDeps,d=(m.f||(m.f=["assets/Edit-MeOFCkfM.js","assets/index-n9Og-A_M.js","assets/index-CLQgUgOb.css"])))=>i.map(i=>d[i]);
-import{j as t,A as i,m as e,r as a,_ as s}from"./index-n9Og-A_M.js";const r=a.lazy(()=>s(()=>import("./Edit-MeOFCkfM.js"),__vite__mapDeps([0,1,2]))),o=()=>t.jsx(i,{children:t.jsx(e.div,{className:"w-full h-full",initial:{y:-200},animate:{y:0},exit:{y:200},transition:{duration:.5,ease:[.22,1,.36,1]},children:t.jsx(r,{})})});export{o as default};
