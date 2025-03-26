@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const URL='https://notes-pi-amber.vercel.app'
+
 export const api = axios.create({baseURL: import.meta.env.VITE_URI});
 
 const usenote = (setNotesData) => {
