@@ -1,33 +1,10 @@
-import express from 'express';
-const app = express();
-import cors from 'cors'
-import path from 'path'
-import { fileURLToPath } from 'url';
+import http from 'http'
+import app from './app.js'
 
-import dotenv from 'dotenv';
-dotenv.config();
+const port = process.env.PORT
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const server = http.createServer(app);
 
-import connectToDB from './db/db.js'
-connectToDB();
-
-import notesRoutes from './routes/notes.routes.js'
-
-
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
-app.use('/', notesRoutes);
-
-app.use(express.static(path.join(__dirname,"./frontend/dist")))
-app.get('*',(req,res) =>{
-    res.sendFile(path.resolve(__dirname,"./","frontend","dist","index.html"))
-})
-
-
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`server Running on ${port}`)
 })
