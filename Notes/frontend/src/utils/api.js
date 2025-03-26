@@ -1,12 +1,11 @@
 import axios from "axios";
 
-const URL=''
 
-export const api = axios.create({baseURL: URL});
+export const api = axios.create({baseURL: import.meta.env.VITE_URI});
 
 const usenote = (setNotesData) => {
   const getnote = async () => {
-    const note = await axios.get(`${URL}/getnotes`);
+    const note = await axios.get(`${import.meta.env.VITE_URI}/getnotes`);
     setNotesData(note.data);
   };
   return{getnote};
