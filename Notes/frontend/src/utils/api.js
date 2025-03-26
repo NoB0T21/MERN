@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URL='https://notes-pi-amber.vercel.app'
+const URL=''
 
 export const api = axios.create({baseURL: URL});
 
