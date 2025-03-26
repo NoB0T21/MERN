@@ -1,6 +1,6 @@
-import React from "react";
+import { lazy } from "react";
 import { Outlet} from "react-router-dom";
-import Form from "./others/Form";
+const Form  = lazy(()=> import("./others/Form"));
 
 
 const Home = () => {

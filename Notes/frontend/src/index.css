@@ -14,6 +14,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.scrool::-webkit-scrollbar{
+  display: none;
+}
+
 body {
   margin: 0;
 }
@@ -31,4 +35,13 @@ button {
   font-weight: 500;
   font-family: inherit;
   cursor: pointer;
+}
+
+@layer utilities{
+  .bg-color{
+    @apply bg-gradient-to-br from-indigo-500 to-purple-900
+  }
+  .bg-colorhover{
+    @apply bg-gradient-to-br to-purple-900 from-indigo-500
+  }
 }

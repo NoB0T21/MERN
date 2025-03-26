@@ -1,13 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
-import NotesContext from './context/Dataprovider.jsx'
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App.jsx';
+import NotesContext from './context/Dataprovider.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <NotesContext>
       <App />
     </NotesContext>
-  </StrictMode>,
-)
+  </StrictMode>
+);

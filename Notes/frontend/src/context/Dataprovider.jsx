@@ -1,14 +1,14 @@
-import { createContext, useEffect, useState } from "react"
-import  usenote from '../utils/api.js'
+import { createContext, useEffect, useState } from "react";
+import  usenote from '../utils/api.js';
 
-export const NotesContext = createContext()
+export const NotesContext = createContext();
 
 const Dataprovider = ({children}) => {
-    const [notesData, setNotesData] = useState([])
-    const {getnote}=usenote(setNotesData)
+    const [notesData, setNotesData] = useState([]);
+    const {getnote}=usenote(setNotesData);
     useEffect(()=>{
-        getnote()
-    },[])
+        getnote();
+    },[]);
     
   return (
     <div>
@@ -16,7 +16,7 @@ const Dataprovider = ({children}) => {
         {children}
     </NotesContext.Provider>
     </div>
-  )
-}
+  );
+};
 
-export default Dataprovider
+export default Dataprovider;
