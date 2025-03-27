@@ -1,0 +1,19 @@
+{
+  "name": "data_association",
+  "version": "1.0.0",
+  "description": "It is a app to store user and manage them with functionality of login, logout",
+  "main": "server.ts",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "author": "Aryan",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.13.0"
+  }
+}
