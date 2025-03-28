@@ -1,5 +1,5 @@
-import user from "../models/user.model.js";
-import { findUsers, createUsers, findusers } from "../services/user.service.js"
+import {generateToken} from '../middleware/cookies.js'
+import { findUsers, createUsers} from "../services/user.service.js"
 import bcrypt from 'bcrypt'; 
 
 
@@ -67,6 +67,40 @@ export const loginUser = async (req,res) => {
         return res.status(201).json({
             message: "USer Login",
             success:true
+        })
+    }catch(err){
+        return serverError(res)
+    }
+}
+
+export const random = (req,res)=>{
+    res.status(201).json({
+        message: "USer Login",
+        success:true
+    })
+}
+export const getCookies = (req,res)=>{
+        const token = req.cookies.token
+        return res.status(201).json({
+            token: token
+        })
+}
+
+export const setCookies = async (req,res) => {
+    const {email , name} = req.body
+    if(!email){
+        return notFound(res)
+    }
+    try{
+        const token = await generateToken(email, name)
+        if(!token)return serverError(res)
+            
+        res.cookie('token',token, {
+            httpOnly: true
+        })
+
+        return res.status(201).json({
+            token: token
         })
     }catch(err){
         return serverError(res)

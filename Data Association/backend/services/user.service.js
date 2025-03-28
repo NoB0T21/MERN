@@ -18,15 +18,6 @@ export const findUsers = async (email) => {
     }
 };
 
-export const findusers = async (email) => {
-    try{
-       const user = await userModels.findOne({email});
-       return user;
-    }catch(err) {
-        errorHandling();
-    }
-};
-
 export const createUsers = async (name, username, email, password, image) => {
     const hash = await bcrypt.hash(password, 10);
     try{

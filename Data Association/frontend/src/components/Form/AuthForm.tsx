@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { api } from "../../utils/api";
 import { PulseLoader } from "react-spinners";
+import { getcookie } from "../../utils/cookie";
+import  Cookie from "js-cookie";
 
 
 const formSchema = z.object({
@@ -72,7 +74,9 @@ const AuthForm = ({type}: {type: AuthFormType}) => {
             const response = await api.post(endpoint, outpoint);
             const data = response.data
             if(response.data){
-                setStatus(data);  
+                setStatus(data); 
+                const cookie = await getcookie(email, name) 
+                Cookie.set('token',cookie.data.token)
             }         
         }catch(err){
             return err
@@ -89,7 +93,7 @@ const AuthForm = ({type}: {type: AuthFormType}) => {
             SetError({})
         }
     }
-
+    
     useEffect(() => {
         console.log(status);
     }, [status]);
