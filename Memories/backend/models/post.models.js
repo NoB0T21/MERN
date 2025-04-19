@@ -3,6 +3,7 @@ const formatDate = require('./time')
 
 const fileSchema = mongoose.Schema({
     creator: {
+        required: true,
         type:String,
     },
     title: {
@@ -23,12 +24,15 @@ const fileSchema = mongoose.Schema({
         default: formatDate(new Date().toISOString())
     },
     path:{
+        required: true,
         type: String,
     },
     originalname:{
+        required: true,
         type: String,
     },
     ImageUrl:{
+        required: true,
         type: String,
     },
 });

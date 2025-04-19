@@ -1,39 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import {useNavigate} from 'react-router-dom'
-import api from '../../utils/api.js'
+import React, { useContext, useEffect, useState } from 'react';
+import {useNavigate} from 'react-router-dom';
+import {api} from '../../utils/api.js';
+import useData from '../../utils/api.js';
 import { ToastContainer, toast } from 'react-toastify';
+import { DataContext } from '../../context/DataProvider';
 
 
 const Edit = () => {
-  const navigate = useNavigate()
-  const [post, setPost] = useState([])
+  const navigate = useNavigate();
+  const [postData, setPostData] = useContext(DataContext);
+  const [post, setPost] = useState([]);
+  const [creator, setCreator] = useState(`${post.creator}`);
+  const [title, setTitle] = useState(`${post.title}`);
+  const [message, setMessage] = useState(`${post.message}`);
+  const [tags, setTags] = useState(`${post.tags}`);
 
-  const [creator, setCreator] = useState(`${post.creator}`)
-    const [title, setTitle] = useState(`${post.title}`)
-    const [message, setMessage] = useState(`${post.message}`)
-    const [tags, setTags] = useState(`${post.tags}`)
-    const [files, setFiles] = useState([]);
-
-  const notify = () => toast.success('Post created Sucessfully', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      });
-    const error1 = (err) => toast.error(`${err}`, {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "dark",
-      });;
+  const error1 = (err) => toast.error(`${err}`, {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: false,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "dark",
+  });
 
   const getIdFromUrl = () => {
     const path = window.location.pathname; // Example: /profile/123
@@ -43,17 +34,13 @@ const Edit = () => {
   const id = getIdFromUrl();
 
   const getpost = async () => {
-    const {data} = await api.get(`/edit/${id}`)
-    setPost(data)
+    const {data} = await api.get(`${import.meta.env.VITE_BASE_URL}/edit/${id}`);
+    setPost(data);
 
-    setCreator(`${data.creator}`)
-    setTitle(`${data.title}`)
-    setMessage(`${data.message}`)
-    setTags(`${data.tags}`)
-  }
-
-  const changeFiles = (e) => {
-    setFiles(e.target.files[0]);
+    setCreator(`${data.creator}`);
+    setTitle(`${data.title}`);
+    setMessage(`${data.message}`);
+    setTags(`${data.tags}`);
   };
 
   const uploadFiles = async (e) => {
@@ -66,69 +53,61 @@ const Edit = () => {
     "tags": tags};
   
     try {
-      const response = api.post(`${import.meta.env.VITE_BASE_URL}/update/${post._id}`,
+      const response = api.patch(`${import.meta.env.VITE_BASE_URL}/update/${post._id}`,
         formData
       );
       
       if(response === undefined){
         const err = 'server is closed'
         error1(err)
-      }else{
-        notify()
       }
-      navigate('/')
+      const {getData}=useData(setPostData);
+      getData();
+      getData();
+      navigate('/');
     } catch (error) {
-      error1(error.message)
+      error1(error.message);
     }
     
-    setCreator('')
-    setTitle('')
-    setMessage('')
-    setTags('')
+    setCreator('');
+    setTitle('');
+    setMessage('');
+    setTags('');
   };
 
   const clear = (e) => {
     e.preventDefault();
-    navigate('/')
+    navigate('/');
 }
 
   useEffect(() => {
-    getpost()
+    getpost();
   }, [])
 
   return (
-    <div className='w-screen flex h-full justify-between'>
-      <div className=' bg-zinc-700 mt-5 flex flex-col justify-center rounded-md h-[55%] max-h-140 w-[45%] min-w-50 max-w-85 relative overflow-clip'>
-        <img className='h-65 static object-cover rounded-md bg-black opacity-70' src={post.ImageUrl} />
-        <div className=' absolute flex flex-col items-start justify-center top-2 left-5 text-white'>
-          <div>{post.creator}</div>
-          <div>{post.createdAt}</div>
-        </div>
-        <div className=' static flex justify-between px-2 py-2 mx-5 mt-1'>{post.tags}</div>
-        <h1 className=' static text-2xl font-semibold flex justify-between px-2 py-2 mx-5'>{post.title}</h1>
-        <div className=' text-xl font-medium flex px-2 mx-5'>{post.message}</div>
-        <div className=' static px-2 py-3 flex justify-between'>
-        </div>
+    <div className='flex justify-center items-center gap-2 w-screen h-full'>
+      <div className='flex flex-col justify-center items-center gap-3 bg-zinc-600 m-5 mr-0 p-3 rounded-sm md:w-1/2 w2/3'>
+      <h2 className='mb-3 font-semibold text-2xl'>Update Memory</h2>
+      <div className='relative flex flex-col justify-start bg-zinc-700 mt-5 rounded-md w-60 md:w-auto md:max-w-100 h-auto overflow-clip'>
+        <img className='static bg-black opacity-70 rounded-md h-65 object-cover' src={post.ImageUrl} />
       </div>
-      <div className='bg-zinc-600 rounded-sm w-1/3 max-w-110 m-5 mr-0 p-3 flex flex-col justify-center items-center gap-2'>
-      <h2 className=' text-2xl font-semibold mb-3'>Create a Memory</h2>
-      <form className="w-full p-3 flex flex-col justify-center items-center gap-3 text-white">
-          <input onChange={(e) => {setCreator(e.target.value)}} value={creator} className=" w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="creator" placeholder="Creator"/>
-          <input onChange={(e) => {setTitle(e.target.value)}} value={title} className="w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="title" placeholder="Title"/>
-          <input onChange={(e) => {setMessage(e.target.value)}} value={message} className="w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="message" placeholder="Message"/>
-          <input onChange={(e) => {setTags(e.target.value)}} value={tags} className="w-[97%] py-3 px-4 mx-[10px] bg-zinc-800 outline-none rounded-md" type="text" name="tags" placeholder="Tags"/>
-          <button onClick={uploadFiles} className="bg-indigo-500 hover:bg-indigo-700 w-full mt-3 p-2 rounded-md flex gap-2 items-center justify-center " type="submit" value="Upload">
+      <form className="flex flex-col justify-center items-center gap-3 p-3 w-full text-white">
+          <input onChange={(e) => {setCreator(e.target.value)}} value={creator} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="creator" placeholder="Creator"/>
+          <input onChange={(e) => {setTitle(e.target.value)}} value={title} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="title" placeholder="Title"/>
+          <input onChange={(e) => {setMessage(e.target.value)}} value={message} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="message" placeholder="Message"/>
+          <input onChange={(e) => {setTags(e.target.value)}} value={tags} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="tags" placeholder="Tags"/>
+          <button onClick={uploadFiles} className="flex justify-center items-center gap-2 bg-indigo-500 hover:bg-indigo-700 mt-3 p-2 rounded-md w-full" type="submit" value="Upload">
           <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
             <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
           </svg>
-            <h1 className=' text-[1.2rem] font-semibold'>Edit Post</h1></button>
-        <button onClick={clear} className="bg-red-400 hover:bg-red-600 w-full mt-3 p-2 rounded-md flex gap-2 items-center justify-center " type="submit" value="Upload"><h1 className=' text-[1.2rem] font-semibold'>Cancle</h1></button>
+            <h1 className='font-semibold text-[1.2rem]'>Edit Post</h1></button>
+        <button onClick={clear} className="flex justify-center items-center gap-2 bg-red-400 hover:bg-red-600 mt-3 p-2 rounded-md w-full" type="submit" value="Upload"><h1 className='font-semibold text-[1.2rem]'>Cancle</h1></button>
         </form>
         <ToastContainer/>
-    </div>
+      </div>
     </div>
   )
-}
+};
 
-export default Edit
+export default Edit;

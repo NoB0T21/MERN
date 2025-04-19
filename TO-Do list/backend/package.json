@@ -5,7 +5,7 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "npx nodemon server.js",
+    "start": "nodemon server.js",
     "server": "node server.js",
     "client": "cd ../frontend && npm run dev",
     "client-build": "cd ../frontend && npm run build",
@@ -14,12 +14,15 @@
   "author": "Aryan",
   "license": "ISC",
   "dependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/node": "^7.26.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
-    "mongoose": "^8.11.0",
-    "nodemon": "^3.1.9"
+    "mongoose": "^8.12.1",
+    "nodemon": "^3.1.9",
+    "server": "^1.0.41"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

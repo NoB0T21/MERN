@@ -4,7 +4,9 @@
   "description": "Its a social media app were people create posts and gets like ",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon server.js"
+    "start": "npx nodemon server.js",
+    "client": "npm run dev --prefix ../frontend",
+    "dev": "concurrently \"npm start\" \"npm run client\""
   },
   "author": "Aryan",
   "license": "ISC",
@@ -19,5 +21,8 @@
     "multer": "^1.4.5-lts.1",
     "nodemon": "^3.1.9",
     "uuid-v4": "^0.1.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }

@@ -1,23 +1,14 @@
-import React, { createContext, useEffect, useState } from 'react'
-import axios from 'axios'
+import { createContext, useEffect, useState } from 'react';
+import useData from '../utils/api';
 
-export const DataContext = createContext()
+export const DataContext = createContext();
 const DataProvider = ({children}) => {
-    const [postData, setPostData] = useState([])
-
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const response = await axios.get("http://localhost:3000/home");
-            setPostData(response.data || []);
-          } catch (error) {
-            console.error("Error fetching data:", error);
-          }
-        };
-    
-        fetchData();
-      }, []);
-
+  const [postData, setPostData] = useState([]);
+  const {getData} = useData(setPostData);
+  useEffect(() => {
+    getData();
+  }, []);
+  
   return (
     <div>
       <DataContext.Provider value={[postData, setPostData]}>
@@ -25,6 +16,6 @@ const DataProvider = ({children}) => {
       </DataContext.Provider>
     </div>
   )
-}
+};
 
-export default DataProvider
+export default DataProvider;

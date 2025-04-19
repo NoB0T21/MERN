@@ -13,7 +13,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: [<Posts/>,<Form/>],
+        element: [<Posts key={'1'}/>,<Form key={'2'}/>],
          
       },
       {

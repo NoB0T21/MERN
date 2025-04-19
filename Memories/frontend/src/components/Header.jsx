@@ -1,12 +1,12 @@
-import React from 'react'
+import logo from '../assets/Logo.png';
 
 const Header = () => {
   return (
-    <div className='bg-zinc-700 mx-30 my-[15px] rounded-md flex justify-center items-center'>
-      <h1 className=' text-5xl font-bold'>Memories</h1>
-      <img className=' ml-[15px] h-15 w-15' src='https://kktujjbosxvzrswnbwpz.supabase.co/storage/v1/object/public/NoB0T//Logo.png'/>
+    <div className='flex justify-center items-center bg-zinc-700 mx-10 md:mx-20 mt-[15px] rounded-md'>
+      <h1 className='font-bold text-4xl md:text-5xl'>Memories</h1>
+      <img className='ml-[15px] w-12 md:w-15 h-12 md:h-15' src={logo}/>
     </div>
   )
-}
+};
 
-export default Header
+export default Header;

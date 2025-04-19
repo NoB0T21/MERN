@@ -1,19 +1,19 @@
-import React, { useContext } from 'react'
-import Post from './post'
-import { DataContext } from '../../context/DataProvider'
+import { useContext } from 'react';
+import Post from './post';
+import { DataContext } from '../../context/DataProvider';
 
 const Posts = () => {
-  const [postData] = useContext(DataContext)
-  if (!postData.length) {
-    return <p>Loading posts...</p>; // Show loading message while waiting for data
-  }
+  const [postData,setPostData] = useContext(DataContext);
+  if (postData.length === 0) {
+    return <p>Loading posts...</p>;
+  };
   return (
-    <div className='flex flex-wrap justify-start items-start mt-5 gap-5 overflow-y-auto'>
-      {postData.slice().reverse().map((e, idx) => (
-        <Post key={idx} data={e} />
-      ))}
+    <div className='flex flex-wrap justify-center md:justify-start items-start gap-12 mt-3 rounded-lg h-screen overflow-auto'>
+      {postData.slice().reverse().map((e) => {
+        return <Post key={e._id} data={e} />
+      })}
     </div>
   )
-}
+};
 
-export default Posts
+export default Posts;
