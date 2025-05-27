@@ -135,7 +135,7 @@ const Form = () => {
 
   return (
     <>
-      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 m-1 mt-5 p-3 rounded-sm w-220 max-w-150 h-140 max-h-150'>
+      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 m-1 mt-5 p-3 rounded-sm w-90 max-w-130 h-140 max-h-150'>
         <h2 className='my-3 font-semibold text-2xl'>Create a Memory</h2>
         <form className="flex flex-col justify-center items-center gap-3 p-2 w-full text-white">
           {error.creator === ''? '': <p className='text-red-500 text-sm'>{error.creator}</p>}
