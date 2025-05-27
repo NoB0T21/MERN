@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useState } from 'react'
+import AuthForm from './Forms/AuthForm';
+
 import Header from './Header'
 const Unauth = () => {
   return (
     <>
         <Header/>
-        <div>
-            hello
+        <div className='flex justify-center mx-10 my-10'>
+            <AuthForm/>
         </div>
     </>
   )

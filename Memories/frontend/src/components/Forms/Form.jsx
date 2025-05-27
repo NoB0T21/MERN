@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
-import { DataContext } from '../context/DataProvider';
-import useData from '../utils/api.js';
+import { DataContext } from '../../context/DataProvider.jsx';
+import useData from '../../utils/api.js';
 import {z} from 'zod';
 import { PulseLoader } from "react-spinners";
 

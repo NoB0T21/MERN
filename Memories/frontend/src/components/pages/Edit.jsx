@@ -64,7 +64,7 @@ const Edit = () => {
       const {getData}=useData(setPostData);
       getData();
       getData();
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       error1(error.message);
     }
@@ -77,7 +77,7 @@ const Edit = () => {
 
   const clear = (e) => {
     e.preventDefault();
-    navigate('/');
+    navigate('/', { replace: true });
 }
 
   useEffect(() => {

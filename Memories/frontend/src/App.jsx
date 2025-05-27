@@ -1,16 +1,16 @@
 
-import {createBrowserRouter, RouterProvider} from 'react-router-dom'
+import {createBrowserRouter, RouterProvider, Navigate} from 'react-router-dom'
 import './App.css'
 import Edit from './components/pages/Edit'
 import Home from './components/pages/Home'
 import Posts from './components/Posts/Posts'
-import Form from './components/Form'
+import Form from './components/Forms/Form'
 import Unauth from './components/Unauth'
-const user = " im user"
+const user = ""
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home/>,
+    element: [user ? <Home key={location.pathname} /> : <Navigate to={'/user'}/>] ,
     children: [
       {
         path: '/',
@@ -19,13 +19,13 @@ const router = createBrowserRouter([
       },
       {
         path: '/edit/:_id',
-        element: <Edit/>,
+        element: <Edit />,
       },
     ]
   },
   {
     path: '/user',
-    element: <Unauth/>,
+    element: [user ? <Navigate to={'/'} key={5}/> : <Unauth key={4}/> ],
     children:[]
   }
 ])
