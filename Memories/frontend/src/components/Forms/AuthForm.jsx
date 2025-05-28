@@ -1,6 +1,7 @@
 import {useState } from 'react'
 import { PulseLoader } from "react-spinners";
-import {GoogleLogin, useGoogleLogin} from '@react-oauth/google'
+import {useGoogleLogin} from '@react-oauth/google';
+import { api } from '../../utils/api';
 
 
 const AuthForm = () => {
@@ -23,13 +24,42 @@ const AuthForm = () => {
     if (password === confirm) {
       setPass('true');
     } else {
-      setPass('false');
+        setPass('false');
     }
-  }
+}
 
-  const handleGoogleLogin = useGoogleLogin({
-    onSuccess: (res) => {
-        console.log(res);
+const registerUser = async (token,userData) => {
+    if(!token || !userData){console.log('no user data')}
+    try {
+        const data = {
+            token: token,
+            email: userData.email,
+            name: userData.name,
+            picture: userData.picture,
+            sub: userData.sub,
+        }
+        const user = await api.post('/user/google/signin',data,{withCredentials: true})
+        if(!user){console.log('failed')}
+    } catch (err) {
+        console.error(err)
+    }
+}
+
+const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (res) => {
+        try{
+            const userData = await api.get('https://www.googleapis.com/oauth2/v3/userinfo',
+                {
+                    headers: {
+                        Authorization: `Bearer ${res.access_token}`,
+                    },
+                }
+            )
+            console.log(res)
+            registerUser(res.access_token,userData.data)
+        }catch(err){
+            console.error(err)
+        }
     },
     onError: () => {
         console.log ('Login failed')
@@ -139,10 +169,10 @@ const AuthForm = () => {
             </>}
             <div className='flex flex-row items-start gap-2 w-full'>
                 <button type='submit' disabled={isLoding||pass === '' || pass == "false"} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{isLoding === false && (isSignin ? 'Sign In' : 'Sign Up')}{isLoding === true && <PulseLoader color="#fff"/>}</button>
-                <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 transition-all ease-in-out hover:scale=2'>Google</button>
+                <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 transition-all ease-in-out hover:scale-[1.05]'>Google</button>
             </div>
         </form>
-        <div onClick={() => setIsSignin(!isSignin)} className='mt-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
+        <div onClick={() => setIsSignin(!isSignin)} className='my-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
             <p>{isSignin ? "Don't have an account?" : "Already have an account?"} <i className='text-blue-400'>{isSignin ? 'Sign Up' : 'Sign In'}</i></p>
         </div>
     </div>
