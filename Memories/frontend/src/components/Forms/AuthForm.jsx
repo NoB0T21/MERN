@@ -1,82 +1,110 @@
-import React, {useRef, useState } from 'react'
+import {useState } from 'react'
 import { PulseLoader } from "react-spinners";
+import {GoogleLogin, useGoogleLogin} from '@react-oauth/google'
+
 
 const AuthForm = () => {
   const [isSignin, setIsSignin] = useState(false);
   const [isLoding, setIsLoding] = useState(false);
   const [show, setShow] = useState(false);
   const [pass, setPass] = useState('');
-  const [firstName, setFirstName] = useState('')
-  const [lastName, setLastName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirm, setConfirm] = useState('')
+  const [errormsg, setError] = useState({})
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirm: ''
+  })
 
 
-  const handlePassword=(e) => {
-    if(e !== password){
-        document.getElementById('confirm').style.outline = '1px solid #cc4548'
-        setPass('false')
-    }else if(e === password){
-        if(e === ''){
-            document.getElementById('confirm').style.outline = 'none'
-            setPass('')
-        }else{
-            document.getElementById('confirm').style.outline = '1px solid green'
-            setPass('true')
-        }
-    }  
-    else{
-        document.getElementById('confirm').style.outline = 'none'
-        setPass('')
+  const handlePassword=(confirm, password ) => {
+    if (!confirm) return setPass('');
+    if (password === confirm) {
+      setPass('true');
+    } else {
+      setPass('false');
     }
   }
 
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (res) => {
+        console.log(res);
+    },
+    onError: () => {
+        console.log ('Login failed')
+    }
+  })
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(pass === 'true'){
-        setIsLoding(true);
+    const newErrors = {};
+    if (!isSignin) {
+        if (!formData.firstName || formData.firstName.length < 3) {
+            newErrors.firstName = 'First name must be at least 3 characters';
+        }
+        if (!formData.lastName || formData.lastName.length < 3) {
+            newErrors.lastName = 'Last name must be at least 3 characters';
+        }
+        if (pass !== 'match') {
+            newErrors.confirm = 'Passwords do not match';
+        }
+    }
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.password || formData.password.length < 3) {
+        newErrors.password = 'Password must be at least 3 characters';
+    }
+    
+    setError(newErrors);
+    console.log(errormsg)
+    
+    if (Object.keys(newErrors).length === 0) {
+        setIsLoading(true);
+
     }
   }
 
   return (
     <div className='flex flex-col justify-center gap-2 bg-zinc-700 rounded-md w-100 lg:w-120'>
         <h1 className='my-4 font-semibold text-3xl'>{isSignin ? 'Sign In' : 'Sign Up'}</h1>
-        <form className='flex flex-col justify-center items-center gap-3 mx-3' autoComplete='off'>
-        { isSignin ?
-            null : 
+        <form className='flex flex-col gap-3 mx-3'onSubmit={handleSubmit} noValidate>
+        { !isSignin &&
             <div className='flex justify-between gap-3'>
                 <div className="relative w-full">
-                    <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required
+                    {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.firstName}</p>}
+                    <input type="text" value={formData.firstName} onChange={(e) => {setFormData({...formData, firstName: e.target.value})}} error={errormsg.firstName} required autoComplete="off"
                         className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
-                    />
-                    <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-sm scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-                    First name
+                        />
+                    <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs text-clip scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+                    <span>FirstName</span>
                     </label>
                 </div>
                 <div className="relative w-full">
-                    <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required
+                    {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.lastName}</p>}
+                    <input type="text" value={formData.lastName} onChange={(e) => {setFormData({...formData, lastName: e.target.value})}} required autoComplete="off"
                         className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                     />
-                    <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-sm scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-                    Last name
+                    <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+                    <span>Last name</span>
                     </label>
                 </div>
             </div>}
             <div className="relative w-full">
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.email}</p>}
+                <input type='email' value={formData.email} onChange={(e) => {setFormData({...formData, email: e.target.value})}} required autoComplete="off"
                     className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                 />
-                <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-sm scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-                Email
+                <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+                <span>Email</span>
                 </label>
             </div>
             <div className="relative w-full">
-                <input autoComplete="new-password" type={show ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} required
+                {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.password}</p>}
+                <input type={show ? "text" : "password"} value={formData.password} onChange={(e) => {handlePassword(formData.confirm,e.target.value);setFormData({...formData, password: e.target.value})}} required autoComplete="off"
                     className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                 />
-                <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-sm scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-                Password
+                <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+                <span>Password</span>
                 </label>
                 <div onClick={() =>setShow(!show)} className='right-4 z-1 absolute flex justify-end p-2 rounded-full text-gray-400 -translate-y-9'>
                 { show ? 
@@ -96,10 +124,11 @@ const AuthForm = () => {
                 }
                 </div>
             </div>
+            {isSignin ? null : <>
             <div className='flex flex-col items-start w-full'>
                 <p className='m-0.5 p-0 text-red-400 text-sm transition-all ease-in-out'></p>
                 <div className="relative w-full">
-                    <input id='confirm' type={show ? "text" : "password"} value={confirm} onChange={(e) => {setConfirm(e.target.value);handlePassword(e.target.value)}} required
+                    <input id='confirm' type={show ? "text" : "password"} value={formData.confirm} onChange={(e) => {handlePassword(e.target.value,formData.password);setFormData({...formData, confirm: e.target.value})}} required autoComplete="off"
                         className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                     />
                     <label className={`left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 ${pass === 'false' && 'peer-focus:text-[#f33a21e9] peer-valid:text-[#f33a21e9] '} ${ pass === 'true' &&'peer-focus:text-[#3df321db] peer-valid:text-[#3df321db]' } text-sm scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform`}>
@@ -107,9 +136,13 @@ const AuthForm = () => {
                     </label>
                 </div>
             </div>
-            <button disabled={pass === '' || pass == "false"} onClick={handleSubmit} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-full h-10 transition-all ease-in-out'>{isLoding === false && (isSignin ? 'Sign In' : 'Sign Up')}{isLoding === true && <PulseLoader color="#fff"/>}</button>
+            </>}
+            <div className='flex flex-row items-start gap-2 w-full'>
+                <button type='submit' disabled={isLoding||pass === '' || pass == "false"} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{isLoding === false && (isSignin ? 'Sign In' : 'Sign Up')}{isLoding === true && <PulseLoader color="#fff"/>}</button>
+                <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 transition-all ease-in-out hover:scale=2'>Google</button>
+            </div>
         </form>
-        <div onClick={() => setIsSignin(isSignin ? false : true)} className='mb-2'>
+        <div onClick={() => setIsSignin(!isSignin)} className='mt-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
             <p>{isSignin ? "Don't have an account?" : "Already have an account?"} <i className='text-blue-400'>{isSignin ? 'Sign Up' : 'Sign In'}</i></p>
         </div>
     </div>
