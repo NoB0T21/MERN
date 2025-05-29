@@ -15,23 +15,22 @@ function notFound(res){
 };
 
 module.exports.googleUserSignin = async (req,res) => {
-    const{token,email,name,picture,sub} = req.body
-
+    const{email,name,picture,sub} = req.body
     if(!email||!name||!picture||!sub){
         return notFound(res)
     }
+    const existinguser = await googleUserServices.getGoogleUser({email,sub})
+    if(existinguser){
+        return res.json({
+            message: "User already exists",
+            success:true
+        });
+    }
     const user = await googleUserServices.createGoogleUser({email,name,picture,sub})
-
+    
     if(!user){
         return serverError(res)
     }
-    const tk = token
-    res.cookie('token',tk,{
-        httpOnly: true,
-        secure: false,
-        sameSite: 'none',
-        maxAge: 24 * 60 * 60 * 1000
-      })
     return res.status(201).json({
         message: "User created",
         success:true
@@ -39,7 +38,7 @@ module.exports.googleUserSignin = async (req,res) => {
 }
 
 module.exports.getgoogleuser = async (req,res) => {
-    const user = await googleUserServices.getGoogleUser()
+    const user = await googleUserServices.getGoogleUsers()
     if(!user){
         return serverError(res)
     }

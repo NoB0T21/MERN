@@ -17,9 +17,19 @@ module.exports.createGoogleUser = async({email,name,picture,sub}) => {
     }
 }
 
-module.exports.getGoogleUser = async() => {
+module.exports.getGoogleUsers = async() => {
     try {
         const googleuser = await userModel.find();
+        return googleuser;
+    } catch (error) {
+        throw new Error(error)
+    }
+}
+
+module.exports.getGoogleUser = async({email,sub}) => {
+    try {
+        const googleuser = await userModel.findOne({email,sub});
+        if(!googleuser) return null
         return googleuser;
     } catch (error) {
         throw new Error(error)

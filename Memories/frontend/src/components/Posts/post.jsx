@@ -1,19 +1,44 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import {api} from '../../utils/api.js';
 import useData from '../../utils/api';
 import { DataContext } from '../../context/DataProvider';
 import {Link} from 'react-router-dom';
 
-const post = (props) => {
-  const [postData, setPostData] = useContext(DataContext);
 
+const post = (props) => {
+  const {setPostData} = useContext(DataContext);
+  const [progress, setProgress] = useState(0);
+  
   const deletePost = async (id) => {
-    const data = await api.post(`${import.meta.env.VITE_BASE_URL}/delete/${id}`);
+    setProgress(10)
+    setProgress(54)
+    const token = localStorage.getItem('token');
+    const data = await api.post(`${import.meta.env.VITE_BASE_URL}/delete/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    console.log(data)
+    setProgress(76)
     const {getData}=useData(setPostData);
       getData();
+    setProgress(100)
   };
 
   return (
+    <>
+    <div className="top-0 absolute w-full max-w-xl">
+      <div className="bg-transparent rounded-full h-[4px] overflow-hidden">
+        <div
+          className="bg-indigo-700 h-full transition-all duration-200 ease-linear"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
     <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
       <img className='static bg-black opacity-70 rounded-md h-65 object-cover' src={props.data.ImageUrl} />
       <div className='top-2 left-5 absolute flex flex-col justify-center items-start text-white'>
@@ -46,6 +71,7 @@ const post = (props) => {
         </button>
       </div>
     </div>
+    </>
   )
 };
 

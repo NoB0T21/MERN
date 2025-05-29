@@ -12,7 +12,7 @@ const formSchema = z.object({
 });
 
 const Form = () => {
-  const [postData, setPostData] = useContext(DataContext);
+  const {setPostData} = useContext(DataContext);
   const [creator, setCreator] = useState('');
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
@@ -84,9 +84,14 @@ const Form = () => {
   
     if(files.length  !== 0){
       try {
+        const token = localStorage.getItem('token');
         const response = axios.post(`${import.meta.env.VITE_BASE_URL}/upload`,
           formData, 
-          { headers: { "Content-Type": "multipart/form-data" },
+          { headers: { 
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+           },
+           withCredentials: true,
           onUploadProgress: (progressEvent) => {
             const progresss = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             setProgress(progresss)

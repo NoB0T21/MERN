@@ -4,6 +4,7 @@ import useData from '../utils/api';
 export const DataContext = createContext();
 const DataProvider = ({children}) => {
   const [postData, setPostData] = useState([]);
+  const [userData, setUserData] = useState([]);
   const {getData} = useData(setPostData);
   useEffect(() => {
     getData();
@@ -11,7 +12,7 @@ const DataProvider = ({children}) => {
   
   return (
     <div>
-      <DataContext.Provider value={[postData, setPostData]}>
+      <DataContext.Provider value={{postData, setPostData, userData, setUserData}}>
         {children}
       </DataContext.Provider>
     </div>

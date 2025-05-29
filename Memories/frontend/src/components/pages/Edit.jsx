@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import {api} from '../../utils/api.js';
 import useData from '../../utils/api.js';
@@ -8,12 +8,13 @@ import { DataContext } from '../../context/DataProvider';
 
 const Edit = () => {
   const navigate = useNavigate();
-  const [postData, setPostData] = useContext(DataContext);
+  const {setPostData} = useContext(DataContext);
   const [post, setPost] = useState([]);
   const [creator, setCreator] = useState(`${post.creator}`);
   const [title, setTitle] = useState(`${post.title}`);
   const [message, setMessage] = useState(`${post.message}`);
   const [tags, setTags] = useState(`${post.tags}`);
+  const [progress, setProgress] = useState(0);
 
   const error1 = (err) => toast.error(`${err}`, {
     position: "top-right",
@@ -34,7 +35,15 @@ const Edit = () => {
   const id = getIdFromUrl();
 
   const getpost = async () => {
-    const {data} = await api.get(`${import.meta.env.VITE_BASE_URL}/edit/${id}`);
+    const token = localStorage.getItem('token');
+    const {data} = await api.get(`${import.meta.env.VITE_BASE_URL}/edit/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
     setPost(data);
 
     setCreator(`${data.creator}`);
@@ -45,7 +54,7 @@ const Edit = () => {
 
   const uploadFiles = async (e) => {
     e.preventDefault();
-    
+    setProgress(10)
     const formData =
     {"creator": creator,
     "title": title,
@@ -53,18 +62,31 @@ const Edit = () => {
     "tags": tags};
   
     try {
+      const token = localStorage.getItem('token');
       const response = api.patch(`${import.meta.env.VITE_BASE_URL}/update/${post._id}`,
-        formData
+        formData,
+          {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          withCredentials: true,
+        }
       );
+      setProgress(50)
       
       if(response === undefined){
         const err = 'server is closed'
         error1(err)
       }
+      setProgress(70)
       const {getData}=useData(setPostData);
-      getData();
-      getData();
-      navigate('/', { replace: true });
+      await setTimeout(() => {
+          getData();
+          getData();
+          setProgress(100);
+          navigate('/', { replace: true });
+        },1000);
+        return () => clearTimeout(timeout);
     } catch (error) {
       error1(error.message);
     }
@@ -85,6 +107,15 @@ const Edit = () => {
   }, [])
 
   return (
+    <>
+     <div className="top-0 absolute w-full max-w-xl">
+      <div className="bg-transparent rounded-full h-[4px] overflow-hidden">
+        <div
+          className="bg-indigo-700 h-full transition-all duration-200 ease-linear"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+    </div>
     <div className='flex justify-center items-center gap-2 w-screen h-full'>
       <div className='flex flex-col justify-center items-center gap-3 bg-zinc-600 m-5 mr-0 p-3 rounded-sm md:w-1/2 w2/3'>
       <h2 className='mb-3 font-semibold text-2xl'>Update Memory</h2>
@@ -107,6 +138,7 @@ const Edit = () => {
         <ToastContainer/>
       </div>
     </div>
+    </>
   )
 };
 

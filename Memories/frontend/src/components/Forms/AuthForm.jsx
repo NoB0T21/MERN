@@ -2,97 +2,103 @@ import {useState } from 'react'
 import { PulseLoader } from "react-spinners";
 import {useGoogleLogin} from '@react-oauth/google';
 import { api } from '../../utils/api';
+import { useNavigate } from 'react-router-dom';
 
 
 const AuthForm = () => {
-  const [isSignin, setIsSignin] = useState(false);
-  const [isLoding, setIsLoding] = useState(false);
-  const [show, setShow] = useState(false);
-  const [pass, setPass] = useState('');
-  const [errormsg, setError] = useState({})
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirm: ''
-  })
+    const navigate = useNavigate();
+    const [isSignin, setIsSignin] = useState(false);
+    const [isLoding, setIsLoding] = useState(false);
+    const [show, setShow] = useState(false);
+    const [pass, setPass] = useState('');
+    const [errormsg, setError] = useState({})
+    const [formData, setFormData] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        password: '',
+        confirm: ''
+    })
 
 
-  const handlePassword=(confirm, password ) => {
+    const handlePassword=(confirm, password ) => {
     if (!confirm) return setPass('');
     if (password === confirm) {
       setPass('true');
     } else {
         setPass('false');
     }
-}
-
-const registerUser = async (token,userData) => {
-    if(!token || !userData){console.log('no user data')}
-    try {
-        const data = {
-            token: token,
-            email: userData.email,
-            name: userData.name,
-            picture: userData.picture,
-            sub: userData.sub,
-        }
-        const user = await api.post('/user/google/signin',data,{withCredentials: true})
-        if(!user){console.log('failed')}
-    } catch (err) {
-        console.error(err)
     }
-}
 
-const handleGoogleLogin = useGoogleLogin({
-    onSuccess: async (res) => {
-        try{
-            const userData = await api.get('https://www.googleapis.com/oauth2/v3/userinfo',
-                {
+    const registerUser = async (userData) => {
+        const token = localStorage.getItem('token');
+        if(!token || !userData)console.log('no user data')
+        try {
+            const data = {
+                email: userData.email,
+                name: userData.name,
+                picture: userData.picture,
+                sub: userData.sub,
+            }
+            const user = await api.post('/user/google/signin',
+                data);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const handleGoogleLogin = useGoogleLogin({
+        onSuccess: async (res) => {
+            try{
+                const userData = await api.get('https://www.googleapis.com/oauth2/v3/userinfo',{
                     headers: {
                         Authorization: `Bearer ${res.access_token}`,
                     },
+                });
+                if(userData.status === 200) {
+                    localStorage.setItem('token',res.access_token);
+                    registerUser(userData.data);
+                    await setTimeout(() => {
+                        navigate('/', { replace: true });
+                    },3000);
                 }
-            )
-            console.log(res)
-            registerUser(res.access_token,userData.data)
-        }catch(err){
-            console.error(err)
+                
+            }catch(err){
+                console.error(err)
+            }
+        },
+        onError: () => {
+            console.log ('Login failed')
         }
-    },
-    onError: () => {
-        console.log ('Login failed')
-    }
-  })
+    })
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = {};
-    if (!isSignin) {
-        if (!formData.firstName || formData.firstName.length < 3) {
-            newErrors.firstName = 'First name must be at least 3 characters';
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const newErrors = {};
+        if (!isSignin) {
+            if (!formData.firstName || formData.firstName.length < 3) {
+                newErrors.firstName = 'First name must be at least 3 characters';
+            }
+            if (!formData.lastName || formData.lastName.length < 3) {
+                newErrors.lastName = 'Last name must be at least 3 characters';
+            }
+            if (pass !== 'match') {
+                newErrors.confirm = 'Passwords do not match';
+            }
         }
-        if (!formData.lastName || formData.lastName.length < 3) {
-            newErrors.lastName = 'Last name must be at least 3 characters';
+        if (!formData.email) newErrors.email = 'Email is required';
+        if (!formData.password || formData.password.length < 3) {
+            newErrors.password = 'Password must be at least 3 characters';
         }
-        if (pass !== 'match') {
-            newErrors.confirm = 'Passwords do not match';
-        }
-    }
-    if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.password || formData.password.length < 3) {
-        newErrors.password = 'Password must be at least 3 characters';
-    }
-    
-    setError(newErrors);
-    console.log(errormsg)
-    
-    if (Object.keys(newErrors).length === 0) {
-        setIsLoading(true);
+        
+        setError(newErrors);
+        console.log(errormsg)
+        
+        if (Object.keys(newErrors).length === 0) {
+            setIsLoading(true);
 
+        }
     }
-  }
 
   return (
     <div className='flex flex-col justify-center gap-2 bg-zinc-700 rounded-md w-100 lg:w-120'>
@@ -169,7 +175,7 @@ const handleGoogleLogin = useGoogleLogin({
             </>}
             <div className='flex flex-row items-start gap-2 w-full'>
                 <button type='submit' disabled={isLoding||pass === '' || pass == "false"} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{isLoding === false && (isSignin ? 'Sign In' : 'Sign Up')}{isLoding === true && <PulseLoader color="#fff"/>}</button>
-                <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 transition-all ease-in-out hover:scale-[1.05]'>Google</button>
+                <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 hover:scale-[1.05] transition-all ease-in-out'>Google</button>
             </div>
         </form>
         <div onClick={() => setIsSignin(!isSignin)} className='my-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
@@ -179,4 +185,4 @@ const handleGoogleLogin = useGoogleLogin({
   )
 }
 
-export default AuthForm
+export default AuthForm;
