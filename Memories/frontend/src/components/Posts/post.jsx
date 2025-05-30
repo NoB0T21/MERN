@@ -22,7 +22,6 @@ const post = (props) => {
         withCredentials: true,
       }
     );
-    console.log(data)
     setProgress(76)
     const {getData}=useData(setPostData);
       getData();

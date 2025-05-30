@@ -27,7 +27,6 @@ module.exports.googleUserSignin = async (req,res) => {
         });
     }
     const user = await googleUserServices.createGoogleUser({email,name,picture,sub})
-    
     if(!user){
         return serverError(res)
     }

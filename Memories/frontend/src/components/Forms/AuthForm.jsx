@@ -92,7 +92,6 @@ const AuthForm = () => {
         }
         
         setError(newErrors);
-        console.log(errormsg)
         
         if (Object.keys(newErrors).length === 0) {
             setIsLoading(true);

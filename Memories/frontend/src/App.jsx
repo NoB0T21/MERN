@@ -36,7 +36,7 @@ function App() {
     <Routes>
       <Route
         path="/"
-        element={user ? <Home/> : <Navigate to="/user" />}
+        element={<Home/>}
       >
         <Route
           index

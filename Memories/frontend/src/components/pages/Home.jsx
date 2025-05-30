@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <>
       <Header/>
-      <div className='flex md:flex-row flex-col justify-between gap-2 md:mx-20 2xl:mx-55 xl:mx-25'>
+      <div className='flex relative md:flex-row flex-col justify-between gap-2 mt-[15px]'>
         <Outlet />
       </div>
     </>
