@@ -5,7 +5,7 @@ import { PulseLoader } from "react-spinners";
 import {z} from 'zod';
 import useData from '../../utils/api.js';
 import axios from 'axios';
-import ImageFill from '../Icons/ImageFill.jsx';
+import {ImageFill, Upload, Upload2, Close} from '../Icons/Icons.jsx';
 
 const formSchema = z.object({
   creator: z.string().min(1,'Name Required'),
@@ -178,30 +178,22 @@ const Form = () => {
           <button disabled={isloding} onClick={uploadFiles} className="flex shadow-lg relative justify-center items-center gap-2 bg-indigo-700 mt-2 p-1 xl:p-2 rounded-md w-full overflow-hidden z-1 transition-all duration-300 before:absolute before:h-full before:w-0 before:bg-indigo-600 before:-z-1 before:transition-all before:duration-350 hover:before:w-full" type="submit" value="Upload">
             {isloding && <><PulseLoader color="#fff"/><p>{progress}%</p></>}
             {!isloding && <>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-              </svg><h1 className='font-semibold text-[1.1rem]'>Create Post</h1>
+              <Upload/><h1 className='font-semibold text-[1.1rem]'>Create Post</h1>
             </>}
           </button>
           <button onClick={clear} className="flex shadow-lg justify-center items-center gap-2 shadow-red-xl/30 bg-red-500 mt-1 p-1 rounded-md w-full relative overflow-hidden z-1 transition-all duration-300 before:absolute before:h-full before:w-0 before:bg-red-400 before:-z-1 before:transition-all before:duration-350 hover:before:w-full" type="submit" value="Upload"><h1 className='font-semibold text-[1.2rem]'>Clear</h1></button>
         </form>
         <ToastContainer/>
       </div>
-      <div className='md:hidden bottom-10 absolute flex justify-center items-center bg-zinc-600 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
+      <div className='md:hidden bottom-0 absolute flex justify-center items-center bg-zinc-600 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
         <button className='flex justify-center items-center' onClick={() => setShow(true)}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
-          </svg>
+          <Upload2/>
         </button>
       </div>
       <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full transition-(top) duration-300 ease-in-ou`}>
         <div className='flex justify-end'>
           <button onClick={() => setShow(false)}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-x" viewBox="0 0 16 16">
-              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
-            </svg>
+            <Close/>
           </button>
         </div>
         <div className='flex flex-col justify-center items-center gap-2 px-3 rounded-sm w-full h-110'>
@@ -241,10 +233,7 @@ const Form = () => {
             <button disabled={isloding} onClick={uploadFiles} className="flex shadow-lg relative justify-center items-center gap-2 bg-indigo-700 mt-2 p-1 xl:p-2 rounded-md w-full overflow-hidden z-1 transition-all duration-300 before:absolute before:h-full before:w-0 before:bg-indigo-600 before:-z-1 before:transition-all before:duration-350 hover:before:w-full" type="submit" value="Upload">
             {isloding && <PulseLoader color="#fff"/>}
             {!isloding && <>
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-upload" viewBox="0 0 16 16">
-                <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
-                <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-              </svg><h1 className='font-semibold text-[1.1rem]'>Create Post</h1>
+              <Upload/><h1 className='font-semibold text-[1.1rem]'>Create Post</h1>
             </>}</button>
             <button onClick={clear} className="flex shadow-lg justify-center items-center gap-2 shadow-red-xl/30 bg-red-500 mt-1 p-1 rounded-md w-full relative overflow-hidden z-1 transition-all duration-300 before:absolute before:h-full before:w-0 before:bg-red-400 before:-z-1 before:transition-all before:duration-350 hover:before:w-full" type="submit" value="Upload"><h1 className='font-semibold text-[1.2rem]'>Clear</h1></button>
           </form>

@@ -1,12 +1,11 @@
 import {useState } from 'react'
+import {GoogleOAuthProvider} from '@react-oauth/google'
 import { PulseLoader } from "react-spinners";
-import {useGoogleLogin} from '@react-oauth/google';
-import { api } from '../../utils/api';
-import { useNavigate } from 'react-router-dom';
+import GoogleForm from './GoogleForm';
 
 
 const AuthForm = () => {
-    const navigate = useNavigate();
+    const googleID = `${import.meta.env.VITE_GOOGLE_ID}`
     const [isSignin, setIsSignin] = useState(false);
     const [isLoding, setIsLoding] = useState(false);
     const [show, setShow] = useState(false);
@@ -29,48 +28,6 @@ const AuthForm = () => {
         setPass('false');
     }
     }
-
-    const registerUser = async (userData) => {
-        const token = localStorage.getItem('token');
-        if(!token || !userData)console.log('no user data')
-        try {
-            const data = {
-                email: userData.email,
-                name: userData.name,
-                picture: userData.picture,
-                sub: userData.sub,
-            }
-            const user = await api.post('/user/google/signin',
-                data);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    const handleGoogleLogin = useGoogleLogin({
-        onSuccess: async (res) => {
-            try{
-                const userData = await api.get('https://www.googleapis.com/oauth2/v3/userinfo',{
-                    headers: {
-                        Authorization: `Bearer ${res.access_token}`,
-                    },
-                });
-                if(userData.status === 200) {
-                    localStorage.setItem('token',res.access_token);
-                    registerUser(userData.data);
-                    await setTimeout(() => {
-                        navigate('/', { replace: true });
-                    },3000);
-                }
-                
-            }catch(err){
-                console.error(err)
-            }
-        },
-        onError: () => {
-            console.log ('Login failed')
-        }
-    })
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -174,7 +131,9 @@ const AuthForm = () => {
             </>}
             <div className='flex flex-row items-start gap-2 w-full'>
                 <button type='submit' disabled={isLoding||pass === '' || pass == "false"} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{isLoding === false && (isSignin ? 'Sign In' : 'Sign Up')}{isLoding === true && <PulseLoader color="#fff"/>}</button>
-                <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 hover:scale-[1.05] transition-all ease-in-out'>Google</button>
+                <GoogleOAuthProvider clientId={googleID}>
+                    <GoogleForm/>
+                </GoogleOAuthProvider>
             </div>
         </form>
         <div onClick={() => setIsSignin(!isSignin)} className='my-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
