@@ -43,3 +43,7 @@ module.exports.getgoogleuser = async (req,res) => {
     }
     res.json(user)
 }
+
+module.exports.createusers = async (req,res) => {
+    console.log(req.body)
+} 
