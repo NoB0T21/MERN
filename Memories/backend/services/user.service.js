@@ -2,7 +2,7 @@ const userModel= require('../models/user.model');
 
 module.exports.findUser = async ({email}) => {
     try {
-        const user = await userModel.find({email});
+        const user = await userModel.findOne({email});
         return user;
     } catch (error) {
         throw new Error(error)

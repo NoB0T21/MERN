@@ -43,7 +43,7 @@ const GoogleForm = () => {
                     await setTimeout(() => {
                         setProgress(100)
                         navigate('/', { replace: true });
-                    },3000);
+                    },2000);
                 }
                 
             }catch(err){

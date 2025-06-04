@@ -21,7 +21,7 @@ export const verifyGoogleToken = async (token) => {
 export const verifyToken = async (token) => {
     if (!token) return null
     try {
-        const responsre = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/token`, {
+        const responsre = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/verify`, {
             withCredentials: true
           });
         return responsre.data;

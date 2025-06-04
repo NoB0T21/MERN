@@ -4,9 +4,11 @@ import { PulseLoader } from "react-spinners";
 import GoogleForm from './GoogleForm';
 import { api } from '../../utils/api';
 import { HidePass, ShowPass } from '../Icons/Icons';
+import { useNavigate } from 'react-router-dom';
 
 
 const AuthForm = () => {
+    const navigate = useNavigate();
     const googleID = `${import.meta.env.VITE_GOOGLE_ID}`
     const [isSignin, setIsSignin] = useState(false);
     const [isLoding, setIsLoding] = useState(false);
@@ -54,13 +56,13 @@ const AuthForm = () => {
         e.preventDefault();
         setIsLoding(true);
          try {
-             setIsLoding(false);
+            setIsLoding(false);
             const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData,{withCredentials: true})
-            const responsre = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/verify`, {
-                withCredentials: true
-              });
-              console.log('user')
-              localStorage.setItem('token',responsre)
+            const responsre = await api.get(`${import.meta.env.VITE_BASE_URL}/user/token`,{withCredentials: true});
+            localStorage.setItem('token',responsre.data.token)
+            await setTimeout(() => {
+                        navigate('/', { replace: true });
+                    },2000);
         } catch (error) {
                 
         }
