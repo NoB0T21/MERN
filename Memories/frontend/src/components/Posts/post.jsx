@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {api} from '../../utils/api.js';
 import useData from '../../utils/api';
 import { DataContext } from '../../context/DataProvider';
@@ -7,9 +7,16 @@ import { Delete, Like, LikeFill, Menu } from '../Icons/Icons.jsx';
 
 
 const post = (props) => {
-  const {setPostData} = useContext(DataContext);
+  const {setPostData,userData} = useContext(DataContext);
   const [progress, setProgress] = useState(0);
+  const [likecount, setLikecount] = useState(props.data.likecount||[]);
+  const [like, setLike] = useState('');
   
+  useEffect(() => {
+  if (!userData || !userData._id) return;
+  setLike(likecount.includes(userData._id));
+}, [likecount, userData && userData._id]);
+  const { postData } = useData(setPostData);
   const deletePost = async (id) => {
     setProgress(10)
     setProgress(54)
@@ -25,10 +32,24 @@ const post = (props) => {
     );
     setProgress(76)
     const {getData}=useData(setPostData);
-      getData();
+    getData();
     setProgress(100)
   };
-
+  const likePost = async () => {
+    const token = localStorage.getItem('token');
+    const data = await api.get(`${import.meta.env.VITE_BASE_URL}/like/${props.data._id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    setLikecount(data.likecount); // update with backend's likecount
+    setLike(data.likecount.includes(userData._id))
+    postData();
+  }
+  
   return (
     <>
     <div className="top-0 absolute w-full max-w-xl">
@@ -36,7 +57,7 @@ const post = (props) => {
         <div
           className="bg-indigo-700 h-full transition-all duration-200 ease-linear"
           style={{ width: `${progress}%` }}
-        />
+          />
       </div>
     </div>
     <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
@@ -54,9 +75,13 @@ const post = (props) => {
       <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
       <div className='flex mx-5 px-2 font-medium text-xl'>{props.data.message}</div>
       <div className='static flex justify-between px-2 py-3'>
-        <button>
-          <Like/>
-          <LikeFill/>
+        <button
+          onClick={likePost}
+          className="flex items-center gap-1"
+        >
+          {like ? <LikeFill /> : <Like />}
+          <span>{like ? "Unlike" : "Like"}</span>
+          <span>({likecount.length})</span>
         </button>
         <button onClick={() => {deletePost(props.data._id)}} className='text-red-500'>
           <Delete/>

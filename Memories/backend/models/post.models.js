@@ -15,10 +15,10 @@ const fileSchema = mongoose.Schema({
     tags: [{
         type:String,
     }],
-    likecount: {
-        type:Number,
-        default: 0,
-    },
+    likecount: [{
+        type:mongoose.Schema.Types.ObjectId,
+        red: 'user',
+    }],
     createdAt: { 
         type: String, 
         default: formatDate(new Date().toISOString())

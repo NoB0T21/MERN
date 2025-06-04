@@ -1,5 +1,6 @@
 const {OAuth2Client} = require('google-auth-library');
 const jwt = require('jsonwebtoken')
+const userModel = require('../models/google.user.models')
 
 const client = new OAuth2Client(process.env.GOOGLE_ID);
 
@@ -21,12 +22,13 @@ const googleAuthMiddleware = async (req,res,next) => {
   try {
     let user
     try{const response = await client.getTokenInfo(accessToken);
-    user=response.email}catch{}
+      const userID = await userModel.findOne({email:response.email});
+    user=userID._id}catch{}
     if(!user){
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      user = decoded.email
+      user = decoded.id
     }
-    req.user = user;
+    req.user = `${user}`;
     next();
   } catch (err) {
     console.error('Token verification failed:', err);

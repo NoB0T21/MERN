@@ -125,6 +125,34 @@ module.exports.updatePost =
     };
 };
 
+module.exports.likePost = async (req, res) => {
+    const userId = req.params.id;
+    const id = req.user
+    if (!userId) {
+        return notFound(res);
+    }
+    try {
+        const post = await postServices.getFiles({userId});
+        if(!post){
+            return serverError(res);
+        }
+        const index = post.likecount.indexOf(id);
+
+        if (index === -1) {
+            post.likecount.push(id); // Like
+        } else {
+            post.likecount.splice(index, 1); // Unlike
+        }
+        await post.save();
+        return res.status(201).json({
+            message: "USer created",
+            success:true
+        })
+    } catch (error) {
+        return serverError(res);
+    };
+};
+
 module.exports.deleteFile = async(req,res) => {
     userId = req.params.id;
     if (!userId) {

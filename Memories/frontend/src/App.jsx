@@ -34,6 +34,7 @@ function App() {
       setLoading(false);
     };
     checkUser();
+    console.log(user)
   }, [location.pathname]);
 
   if (loading) return <div>Loading...</div>;

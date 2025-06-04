@@ -129,11 +129,11 @@ const AuthForm = () => {
             </>}
             <div className='flex flex-row items-start gap-2 w-full'>
                 <button type='submit' disabled={ isLoding||(!isSignin && (pass === '' || pass == "false")||(isSignin && (!form)))} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{!isLoding&& (isSignin ? 'Sign In' : 'Sign Up')}{isLoding && <PulseLoader color="#fff"/>}</button>
+            </div>
+        </form>
                 <GoogleOAuthProvider clientId={googleID}>
                     <GoogleForm/>
                 </GoogleOAuthProvider>
-            </div>
-        </form>
         <div onClick={() => setIsSignin(!isSignin)} className='my-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
             <p>{isSignin ? "Don't have an account?" : "Already have an account?"} <i className='text-blue-400'>{isSignin ? 'Sign Up' : 'Sign In'}</i></p>
         </div>

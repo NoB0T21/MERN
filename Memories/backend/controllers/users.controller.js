@@ -22,6 +22,7 @@ module.exports.googleUserSignin = async (req,res) => {
     if(!email||!name||!picture||!sub){
         return notFound(res)
     }
+    console.log(req.body)
     const existinguser = await googleUserServices.getGoogleUser({email})
     const existinguser1 = await userServices.findUser({email})
     if(existinguser || existinguser1){
