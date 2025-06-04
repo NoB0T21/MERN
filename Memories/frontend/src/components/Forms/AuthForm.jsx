@@ -54,7 +54,13 @@ const AuthForm = () => {
         e.preventDefault();
         setIsLoding(true);
          try {
-            const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData)
+             setIsLoding(false);
+            const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData,{withCredentials: true})
+            const responsre = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/verify`, {
+                withCredentials: true
+              });
+              console.log('user')
+              localStorage.setItem('token',responsre)
         } catch (error) {
                 
         }

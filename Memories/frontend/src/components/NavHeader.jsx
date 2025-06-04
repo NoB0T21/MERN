@@ -6,7 +6,7 @@ import Profile from './Profile';
 
 const Header = () => {
   const {userData} = useContext(DataContext);
-  const user = userData.email_verified;
+  const user = userData;
   return (
     <>
       <div className='flex justify-between bg-zinc-700 mx-10 md:mx-20 2xl:mx-55 xl:mx-25 mt-[15px] rounded-md'>

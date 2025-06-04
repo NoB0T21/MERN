@@ -1,11 +1,12 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
-import { verifyGoogleToken } from './utils/google.verification';
+import { verifyGoogleToken, verifyToken } from './utils/google.verification';
 import { useContext, useEffect, useState } from 'react';
 import Edit from './components/pages/Edit';
 import Home from './components/pages/Home';
 import Posts from './components/Posts/Posts';
 import Form from './components/Forms/Form';
 import Unauth from './components/Unauth';
+import Filler from './components/Filler';
 import './App.css';
 import { DataContext } from './context/DataProvider';
 
@@ -19,7 +20,12 @@ function App() {
     const checkUser = async () => {
       const token = localStorage.getItem("token");
       if (token) {
-        const userInfo = await verifyGoogleToken(token);
+        let userInfo = await verifyToken(token)
+        if(!userInfo?.email){
+          userInfo = await verifyGoogleToken(token);
+          setUser(userInfo);
+          setUserData(userInfo)
+        }
         setUser(userInfo);
         setUserData(userInfo)
       } else {
@@ -43,7 +49,7 @@ function App() {
           element={
             <>
               <Posts />
-              {user ? <Form /> : <Unauth />}
+              {user ? <Form /> : <Filler />}
             </>
           }
         />

@@ -17,3 +17,15 @@ export const verifyGoogleToken = async (token) => {
         return null;
     }
 }
+
+export const verifyToken = async (token) => {
+    if (!token) return null
+    try {
+        const responsre = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/token`, {
+            withCredentials: true
+          });
+        return responsre.data;
+    } catch (error) {
+        return null;
+    }
+}

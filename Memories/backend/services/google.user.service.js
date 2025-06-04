@@ -26,9 +26,9 @@ module.exports.getGoogleUsers = async() => {
     }
 }
 
-module.exports.getGoogleUser = async({email,sub}) => {
+module.exports.getGoogleUser = async({email}) => {
     try {
-        const googleuser = await userModel.findOne({email,sub});
+        const googleuser = await userModel.findOne({email});
         if(!googleuser) return null
         return googleuser;
     } catch (error) {

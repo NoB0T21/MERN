@@ -22,5 +22,8 @@ app.use(cookieParser())
 
 app.use('/', homeRouter);
 app.use('/user', userRouter);
+app.get('/', (req, res) => {
+  res.send('Server is running...');
+});
 
 module.exports = app;

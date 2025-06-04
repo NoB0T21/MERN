@@ -1,4 +1,5 @@
 const {OAuth2Client} = require('google-auth-library');
+const jwt = require('jsonwebtoken')
 
 const client = new OAuth2Client(process.env.GOOGLE_ID);
 
@@ -12,12 +13,20 @@ const googleAuthMiddleware = async (req,res,next) => {
         accessToken = req.body.token;
   }
 
-  if (!accessToken) {
+  const token = req.cookies.token
+  if (!accessToken && !token) {
     return res.status(401).json({ error: 'No access token provided' });
   }
 
   try {
-    const response = await client.getTokenInfo(accessToken);
+    let user
+    try{const response = await client.getTokenInfo(accessToken);
+    user=response.email}catch{}
+    if(!user){
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      user = decoded.email
+    }
+    req.user = user;
     next();
   } catch (err) {
     console.error('Token verification failed:', err);
