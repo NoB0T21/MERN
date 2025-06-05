@@ -88,10 +88,23 @@ module.exports.showFile = async (req, res) => {
 
 module.exports.getPost = async(req,res) => {
     userId = req.params.id;
+    console.log(userId)
     if (!userId) {
         return notFound(res);
     }
     const userPost = await postServices.getFiles({userId});
+    if(!userPost){
+        return serverError(res);
+    }
+    res.status(201).json(userPost);
+};
+
+module.exports.getuserPosts = async(req,res) => {
+    userId = req.params.id;
+    if (!userId) {
+        return notFound(res);
+    }
+    const userPost = await postServices.getuserposts({userId});
     if(!userPost){
         return serverError(res);
     }

@@ -188,7 +188,7 @@ const Form = () => {
         <button className='flex justify-center items-center' onClick={() => setShow(true)}>
           <Upload2/>
         </button>
-        <Link to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData.picture} /></Link>
+        <Link to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData.picture} alt='profile' /></Link>
       </div>
       <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full transition-(top) duration-300 ease-in-out`}>
         <div className='flex justify-end'>

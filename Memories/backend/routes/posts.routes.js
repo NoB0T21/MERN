@@ -11,5 +11,6 @@ router.get('/edit/:id',googleAuthMiddleware,postController.getPost)
 router.patch('/update/:id',googleAuthMiddleware,postController.updatePost)
 router.get('/like/:id',googleAuthMiddleware,postController.likePost)
 router.post('/delete/:id',googleAuthMiddleware,postController.deleteFile);
+router.get('/profile/:id',postController.getuserPosts)
 
 module.exports = router;

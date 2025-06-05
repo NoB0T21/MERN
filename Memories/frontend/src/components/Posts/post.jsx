@@ -10,7 +10,7 @@ const post = (props) => {
   const {setPostData,userData} = useContext(DataContext);
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(false);
-  
+
   const deletePost = async (id) => {
     setProgress(10)
     setProgress(54)
@@ -72,8 +72,8 @@ const post = (props) => {
         <div className='flex mx-5 px-2 font-medium text-xl'>{props.data.message}</div>
         <div className='static flex justify-between px-2 py-3'>
           <button onClick={() =>likePost()} className="flex items-center gap-1">
-            {props.data.likecount.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
-            <span>{props.data.likecount.length}</span>
+            {props.data.likecount?.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
+            <span>{props.data.likecount?.length}</span>
           </button>
           <button onClick={() => {deletePost(props.data._id)}} className='text-red-500'>
             <Delete/>
