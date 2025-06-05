@@ -1,7 +1,7 @@
 const postModel = require('../models/post.models');
 
-module.exports.createFile = async({creator, title, message, tags, path, originalname, ImageUrl}) => {
-    if(!creator ||!path || !originalname || !ImageUrl ){
+module.exports.createFile = async({creator, title, message, tags,owner, path, originalname, ImageUrl}) => {
+    if(!creator ||!path || !owner || !originalname || !ImageUrl ){
         throw new Error("Require all Fields");
     }
     try {
@@ -10,6 +10,7 @@ module.exports.createFile = async({creator, title, message, tags, path, original
             title,
             message,
             tags,
+            owner,
             path,
             originalname,
             ImageUrl,
@@ -41,13 +42,12 @@ module.exports.getFiles = async({userId}) => {
     }
 }
 
-module.exports.updateFile = async({userId, creator, title, message, tags}) => {
-    if(!userId){
+module.exports.updateFile = async({postId, title, message, tags}) => {
+    if(!postId){
         throw new Error("Require all Fields");
     }
     try {
-        const file =  await postModel.findOneAndUpdate({_id: userId},{
-            creator,
+        const file =  await postModel.findOneAndUpdate({_id: postId},{
             title,
             message,
             tags,

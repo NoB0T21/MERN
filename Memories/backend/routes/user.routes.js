@@ -6,6 +6,7 @@ const googleAuthMiddleware = require('../middleware/google.auth.middleware');
 
 router.get('/',googleAuthMiddleware,userController.getgoogleuser)
 router.post('/google/signin',userController.googleUserSignin)
+router.post('/google',googleAuthMiddleware,userController.googleUser)
 router.post('/signup',userController.createusers)
 router.post('/signin',userController.loginusers)
 router.get('/verify',googleAuthMiddleware,userController.verifyUser)

@@ -12,9 +12,22 @@ export const verifyGoogleToken = async (token) => {
             }
         )
         if(res.data && res.email_verified === false) throw new Error('Invalid Token')
-        return res.data;
+        try {
+            const data = res.data.sub
+            const user = await axios.post(`${import.meta.env.VITE_BASE_URL}/user/google`,{sub:data},
+                {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            );
+            return user.data;
+        } catch (err) {
+            console.error(err);
+        }
     } catch (error) {
-        return null;
+        localStorage.removeItem('token')
+        window.location.replace('/user');
     }
 }
 
@@ -26,6 +39,6 @@ export const verifyToken = async (token) => {
           });
         return responsre.data;
     } catch (error) {
-        return null;
+        return null
     }
 }

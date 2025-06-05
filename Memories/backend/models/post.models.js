@@ -19,6 +19,10 @@ const fileSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         red: 'user',
     }],
+    owner:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
     createdAt: { 
         type: String, 
         default: formatDate(new Date().toISOString())

@@ -3,9 +3,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import { DataContext } from '../../context/DataProvider.jsx';
 import { PulseLoader } from "react-spinners";
 import {z} from 'zod';
+import {ImageFill, Upload, Upload2, Close} from '../Icons/Icons.jsx';
+import {Link} from 'react-router-dom'
 import useData from '../../utils/api.js';
 import axios from 'axios';
-import {ImageFill, Upload, Upload2, Close} from '../Icons/Icons.jsx';
 
 const formSchema = z.object({
   title: z.string().min(1,'Name Required'),
@@ -22,9 +23,9 @@ const Form = () => {
   const [show, setShow] = useState(false);
   const [isloding, SetIsloding] = useState(false);
   const [formDatas, setFormData] = useState({
-    title:'',message:'',tags:''
+    name:userData.name, title:'',message:'',tags:'',owner:userData._id
   })
-
+  
   const error1 = (err) => toast.error(`${err}`, {
     position: "top-right",
     autoClose: 5000,
@@ -77,12 +78,17 @@ const Form = () => {
     }
     
     SetIsloding(true);
-    const name= userData.firstName+' ' + userData.lastName
+     if(userData.firstName === undefined){
+       const names = userData.firstName+' ' + userData.lastName
+       setFormData({...formDatas, name: names})
+     }
+
     const formData = new FormData();
-    formData.append('creator', name);
+    formData.append('creator', formDatas.name);
     formData.append('title', formDatas.title);
     formData.append('message', formDatas.message);
     formData.append('tags', formDatas.tags);
+    formData.append('owner', formDatas.owner);
     formData.append('file', files);
     
   
@@ -124,7 +130,7 @@ const Form = () => {
         setShow(false);
         SetIsloding(false);
         setProgress('');
-        setFormData({title:'',message:'',tags:''})
+        setFormData({name:userData.name,title:'',message:'',tags:'',owner:userData._id})
       }
     }
   };
@@ -136,7 +142,7 @@ const Form = () => {
     setShow(false);
     SetIsloding(false);
     setProgress('');
-    setFormData({title:'',message:'',tags:''})
+    setFormData({name:userData.name,title:'',message:'',tags:'',owner:userData._id})
 }
 
   return (
@@ -177,12 +183,14 @@ const Form = () => {
         </form>
         <ToastContainer/>
       </div>
-      <div className='md:hidden bottom-0 absolute flex justify-center items-center bg-zinc-600 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
+      <div className='md:hidden bottom-0 absolute flex justify-between items-center bg-zinc-600 px-5 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
+        <Upload2/>
         <button className='flex justify-center items-center' onClick={() => setShow(true)}>
           <Upload2/>
         </button>
+        <Link to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData.picture} /></Link>
       </div>
-      <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full transition-(top) duration-300 ease-in-ou`}>
+      <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full transition-(top) duration-300 ease-in-out`}>
         <div className='flex justify-end'>
           <button onClick={() => setShow(false)}>
             <Close/>

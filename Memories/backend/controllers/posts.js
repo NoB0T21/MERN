@@ -22,7 +22,7 @@ module.exports.uploadFile =[
     upload.single('file'),
     async (req, res) => {
         const { file } = req;
-        const {creator, title, message, tags} = req.body;
+        const {creator, title, message, tags, owner} = req.body;
 
         if (!file || !creator) {
             return notFound(res);
@@ -59,6 +59,7 @@ module.exports.uploadFile =[
                     title,
                     message,
                     tags,
+                    owner,
                     path: uniqueFilename,
                     originalname: file.originalname,
                     ImageUrl: data.publicUrl,
@@ -98,15 +99,14 @@ module.exports.getPost = async(req,res) => {
 };
 
 module.exports.updatePost =async (req, res) => {
-    userId = req.params.id;
-    const {creator, title, message, tags} = req.body;
-    if (!userId) {
+    postId = req.params.id;
+    const {title, message, tags} = req.body;
+    if (!postId) {
         return notFound(res);
     }
     try {
         const post = await postServices.updateFile({
-            userId,
-            creator,
+            postId,
             title,
             message,
             tags,
@@ -143,7 +143,7 @@ module.exports.likePost = async (req, res) => {
         }
         await post.save();
         return res.status(201).json({
-            message: "USer created",
+            message: "you Liked this post",
             success:true
         })
     } catch (error) {

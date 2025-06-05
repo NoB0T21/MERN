@@ -9,6 +9,7 @@ import Unauth from './components/Unauth';
 import Filler from './components/Filler';
 import './App.css';
 import { DataContext } from './context/DataProvider';
+import Profile from './components/pages/Profile';
 
 function App() {
   const location = useLocation();
@@ -34,7 +35,6 @@ function App() {
       setLoading(false);
     };
     checkUser();
-    console.log(user)
   }, [location.pathname]);
 
   if (loading) return <div>Loading...</div>;
@@ -62,6 +62,10 @@ function App() {
       <Route
         path="/user"
         element={user ? <Navigate to="/" /> : <Unauth />}
+      />
+      <Route
+        path='/user/Profile'
+        element={user ? <Profile/> : <Navigate to='/user'/>}
       />
     </Routes>
   );

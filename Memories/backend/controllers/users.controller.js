@@ -49,6 +49,20 @@ module.exports.getgoogleuser = async (req,res) => {
     res.json(user)
 }
 
+module.exports.googleUser = async (req,res) => {
+    const {sub} = req.body
+    if(!sub){
+        return serverError(res)
+    }
+    const user = await googleUserServices.getGoogleUsersub({sub})
+    if(!user){
+        return serverError(res)
+    }
+    res.json(user)
+}
+
+
+
 module.exports.createusers = async (req,res) => {
     const {firstName,lastName,email,password}=req.body
     if(!firstName||!lastName||!email||!password){

@@ -116,8 +116,8 @@ const Edit = () => {
         />
       </div>
     </div>
-    <div className='flex justify-center items-center gap-2 w-screen h-full'>
-      <div className='flex flex-col justify-center items-center gap-3 bg-zinc-600 m-5 mr-0 p-3 rounded-sm md:w-1/2 w2/3'>
+    <div className='flex justify-center items-center gap-2w-screen h-[90vh] overflow-y-auto'>
+      <div className='flex flex-col justify-center items-center gap-3 bg-zinc-600 m-1 md:m-5 mr-0 p-3 rounded-md md:w-1/2 w2/3'>
       <h2 className='mb-3 font-semibold text-2xl'>Update Memory</h2>
       <div className='relative flex flex-col justify-start bg-zinc-700 mt-5 rounded-md w-60 md:w-auto md:max-w-100 h-auto overflow-clip'>
         <img className='static bg-black opacity-70 rounded-md h-65 object-cover' src={post.ImageUrl} />

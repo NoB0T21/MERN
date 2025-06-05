@@ -1,23 +1,16 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
 import {Link} from 'react-router-dom';
-import { Delete, Like, LikeFill, Menu } from '../Icons/Icons.jsx';
+import { Delete, Like, LikeFill, Menu, Close } from '../Icons/Icons.jsx';
 import useData from '../../utils/api';
+import SigninAlert from '../SigninAlert.jsx';
 
 const post = (props) => {
   const {setPostData,userData} = useContext(DataContext);
   const [progress, setProgress] = useState(0);
-  const [likecount, setLikecount] = useState(props.data.likecount||[]);
-  const [like, setLike] = useState('');
+  const [show, setShow] = useState(false);
   
-  useEffect(() => {
-    if (!userData || !userData._id) return;
-    setLike(likecount.includes(userData._id));
-  }, [likecount, userData && userData._id]);
-
-  const { postData } = useData(setPostData);
-
   const deletePost = async (id) => {
     setProgress(10)
     setProgress(54)
@@ -38,6 +31,10 @@ const post = (props) => {
 
   const likePost = async () => {
     const token = localStorage.getItem('token');
+    if(!token){
+      setShow(true)
+      return
+    }
     const data = await api.get(`${import.meta.env.VITE_BASE_URL}/like/${props.data._id}`,
       {
         headers: {
@@ -46,11 +43,9 @@ const post = (props) => {
         withCredentials: true,
       }
     );
-    setLikecount(data.likecount); // update with backend's likecount
-    setLike(data.likecount.includes(userData._id))
-    postData();
+    const {getData}=useData(setPostData);
+    getData();
   }
-  
   return (
     <>
       <div className="top-0 absolute w-full max-w-xl">
@@ -76,17 +71,23 @@ const post = (props) => {
         <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
         <div className='flex mx-5 px-2 font-medium text-xl'>{props.data.message}</div>
         <div className='static flex justify-between px-2 py-3'>
-          <button
-            onClick={likePost}
-            className="flex items-center gap-1"
-          >
-            {like ? <LikeFill /> : <Like />}
-            <span>{like ? "Unlike" : "Like"}</span>
-            <span>({likecount.length})</span>
+          <button onClick={() =>likePost()} className="flex items-center gap-1">
+            {props.data.likecount.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
+            <span>{props.data.likecount.length}</span>
           </button>
           <button onClick={() => {deletePost(props.data._id)}} className='text-red-500'>
             <Delete/>
           </button>
+        </div>
+      </div>
+      <div className={`${show ? 'flex' : 'hidden'} top-0 right-0 z-3 absolute justify-center items-center backdrop-blur-sm bg-[#0000005d] w-full h-full scroll-none `}>
+        <div className='flex flex-col justify-start items-center gap-6 bg-zinc-800 px-2 pt-5 pb-10 rounded-md w-1/2 md:w-1/3 max-w-[550px] h-1/2 max-h-[700px]'>
+          <div className='flex justify-end w-full'>
+            <button onClick={() => {setShow(false)}}>
+              <Close/>
+            </button>
+          </div>    
+          <SigninAlert/>
         </div>
       </div>
     </>
