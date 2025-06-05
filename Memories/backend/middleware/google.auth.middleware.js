@@ -21,17 +21,20 @@ const googleAuthMiddleware = async (req,res,next) => {
 
   try {
     let user
-    try{const response = await client.getTokenInfo(accessToken);
+    try{
+      const response = await client.getTokenInfo(accessToken);
       const userID = await userModel.findOne({email:response.email});
-    user=userID._id}catch{}
+      user=userID._id
+    }catch{}
     if(!user){
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      user = decoded.id
+      try{
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        user = decoded.id
+      }catch(error){return res.status(401).json({ error: 'Invalid access token' });}
     }
     req.user = `${user}`;
     next();
   } catch (err) {
-    console.error('Token verification failed:', err);
     res.status(401).json({ error: 'Invalid access token' });
   }
 }

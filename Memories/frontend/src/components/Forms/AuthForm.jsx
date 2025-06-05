@@ -1,10 +1,10 @@
 import {useState } from 'react'
 import {GoogleOAuthProvider} from '@react-oauth/google'
 import { PulseLoader } from "react-spinners";
-import GoogleForm from './GoogleForm';
 import { api } from '../../utils/api';
 import { HidePass, ShowPass } from '../Icons/Icons';
 import { useNavigate } from 'react-router-dom';
+import GoogleForm from './GoogleForm';
 
 
 const AuthForm = () => {
@@ -29,8 +29,8 @@ const AuthForm = () => {
     })
 
     const handlePassword=(confirm, password ) => {
-    if (!confirm || !password) return setPass('');
-    setPass(password === confirm ? 'true' : 'false')
+        if (!confirm || !password) return setPass('');
+        setPass(password === confirm ? 'true' : 'false')
     }
     
     const validation = ({first,last,ema,pas}) => {
@@ -131,9 +131,9 @@ const AuthForm = () => {
                 <button type='submit' disabled={ isLoding||(!isSignin && (pass === '' || pass == "false")||(isSignin && (!form)))} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{!isLoding&& (isSignin ? 'Sign In' : 'Sign Up')}{isLoding && <PulseLoader color="#fff"/>}</button>
             </div>
         </form>
-                <GoogleOAuthProvider clientId={googleID}>
-                    <GoogleForm/>
-                </GoogleOAuthProvider>
+        <GoogleOAuthProvider clientId={googleID}>
+            <GoogleForm/>
+        </GoogleOAuthProvider>
         <div onClick={() => setIsSignin(!isSignin)} className='my-4 text-blue-400 text-sm text-center hover:underline cursor-pointer'>
             <p>{isSignin ? "Don't have an account?" : "Already have an account?"} <i className='text-blue-400'>{isSignin ? 'Sign Up' : 'Sign In'}</i></p>
         </div>

@@ -8,6 +8,7 @@ module.exports.findUser = async ({email}) => {
         throw new Error(error)
     }
 }
+
 module.exports.createUser = async ({firstName,lastName,email,password}) => {
     if(!firstName ||!firstName || !email || !password ){
         throw new Error("Require all Fields");

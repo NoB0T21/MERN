@@ -77,8 +77,7 @@ module.exports.uploadFile =[
     }
 ]
 
-module.exports.showFile = 
-    async (req, res) => {
+module.exports.showFile = async (req, res) => {
         const userPosts = await postServices.getFile();
         if(!userPosts){
             return serverError(res);
@@ -98,8 +97,7 @@ module.exports.getPost = async(req,res) => {
     res.status(201).json(userPost);
 };
 
-module.exports.updatePost =
-    async (req, res) => {
+module.exports.updatePost =async (req, res) => {
     userId = req.params.id;
     const {creator, title, message, tags} = req.body;
     if (!userId) {

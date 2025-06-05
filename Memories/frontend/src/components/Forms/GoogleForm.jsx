@@ -60,13 +60,13 @@ const GoogleForm = () => {
   return (
     <>
         <div className="top-0 left-0 absolute w-full max-w-xl">
-      <div className="bg-transparent rounded-full h-[4px] overflow-hidden">
-        <div
-          className="bg-indigo-700 h-full transition-all duration-200 ease-linear"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
-    </div>
+        <div className="bg-transparent rounded-full h-[4px] overflow-hidden">
+            <div
+            className="bg-indigo-700 h-full transition-all duration-200 ease-linear"
+            style={{ width: `${progress}%` }}
+            />
+        </div>
+        </div>
         <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 hover:scale-[1.05] transition-all ease-in-out'>Google</button>
     </>
   )

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
-import logo from '../assets/Logo.png';
 import {Link} from 'react-router-dom';
 import { DataContext } from '../context/DataProvider';
+import logo from '../assets/Logo.png';
 import Profile from './Profile';
 
 const Header = () => {

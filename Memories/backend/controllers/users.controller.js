@@ -22,7 +22,7 @@ module.exports.googleUserSignin = async (req,res) => {
     if(!email||!name||!picture||!sub){
         return notFound(res)
     }
-    console.log(req.body)
+    
     const existinguser = await googleUserServices.getGoogleUser({email})
     const existinguser1 = await userServices.findUser({email})
     if(existinguser || existinguser1){
@@ -54,14 +54,18 @@ module.exports.createusers = async (req,res) => {
     if(!firstName||!lastName||!email||!password){
         notFound(res)
     }
-    const existinguser = await googleUserServices.getGoogleUser({email})
-    const existinguser1 = await userServices.findUser({email})
-    if(existinguser !== null || (Array.isArray(existinguser1) && existinguser1.length > 0)){
-        return res.json({
-            message: "User already exists",
-            success:true
-        });
-    }
+    try{
+        const existinguser = await googleUserServices.getGoogleUser({email})
+        try{
+            const existinguser1 = await userServices.findUser({email})
+            if(existinguser !== null || (Array.isArray(existinguser1) && existinguser1.length > 0)){
+                return res.json({
+                    message: "User already exists",
+                    success:true
+                });
+            }
+        }catch(error){return res.status(401).json({ error: 'No access token provided' });}
+    }catch{}
     const hashpassword = await userModel.hashpassword(password)
     const user  = await userServices.createUser({firstName,lastName,email,password: hashpassword})
     if(!user){
@@ -108,10 +112,15 @@ module.exports.verifyUser = async (req,res) => {
     if (!token) {
         return res.status(401).json({ error: 'No access token provided' });
     }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    user = decoded
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        user = decoded
+    } catch (error) {
+        return res.status(401).json({ error: 'Token not found' });
+    }
     res.json(user)
-} 
+}
+
 module.exports.tokenUser = async (req,res) => {
     try {
         const token = req.cookies.token;
@@ -122,7 +131,8 @@ module.exports.tokenUser = async (req,res) => {
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
-} 
+}
+
 module.exports.logoutUser = async (req,res) => {
     try {
         res.cookie('token','');
@@ -133,4 +143,4 @@ module.exports.logoutUser = async (req,res) => {
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }
-} 
+}
