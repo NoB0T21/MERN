@@ -1,17 +1,69 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Post from './post';
 import { DataContext } from '../../context/DataProvider';
+import { api } from '../../utils/api';
 
 const Posts = () => {
-  const {postData} = useContext(DataContext);
-  if (postData.length === 0) {
-    return <p>Loading posts...</p>;
+  const { postData, setPostData } = useContext(DataContext);
+  const [skip, setSkip] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [poat , setPost] = useState([])
+
+  const fetchPosts = async () => {
+    if (loading || !hasMore) return;
+
+    setLoading(true);
+    try {
+      const { data } = await api.get(`${import.meta.env.VITE_BASE_URL}/home?skip=${skip}`);
+      if (!data || data.length === 0) {
+        setHasMore(false);
+        return;
+      }
+      
+
+      setPostData(prev => {
+  const merged = [...prev, ...data];
+  const unique = Array.from(new Map(merged.map(post => [post._id, post])).values());
+  return unique;
+});
+setPost(prev => {
+  const merged = [...prev, ...data];
+  const unique = Array.from(new Map(merged.map(post => [post._id, post])).values());
+  return unique;
+});
+
+    } catch (err) {
+      console.error(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  useEffect(() => {
+    fetchPosts();
+  }, [skip]);
+
+  const handleScroll = (e) => {
+    const {scrollTop, scrollHeight, clientHeight} = e.target
+     if (scrollTop + clientHeight >= scrollHeight - 100) {
+    setSkip(prev => prev + 1);
+  }
+  };
+
+  if (postData.length === 0 && loading) {
+    return <p>Loading posts...</p>;
+  }
   return (
-    <div className='flex justify-center md:justify-start items-start gap-8 mt-3 md:mx-20 2xl:mx-55 xl:mx-25 rounded-lg h-[92.43vh] md:h-[90vh]'>
-      <div className="w-full h-[83%] justify-center items-start rounded-lg flex flex-wrap gap-8 overflow-auto">{postData.slice().reverse().map((e) => {return <Post key={e._id} data={e} />})}</div>
+    <div className='flex justify-center md:justify-start items-start gap-8 md:mx-20 2xl:mx-55 xl:mx-25 mt-3 rounded-lg h-[92.43vh] md:h-[90vh]'>
+      <div className="flex flex-wrap justify-center items-start gap-8 rounded-lg w-full h-[83%] overflow-scroll" onScroll={handleScroll}>
+        {postData.map((e) => (
+          <Post key={e._id} data={e} limit={poat.length} />
+        ))}
+        {loading && <p>Loading more...</p>}
+      </div>
     </div>
-  )
+  );
 };
 
 export default Posts;

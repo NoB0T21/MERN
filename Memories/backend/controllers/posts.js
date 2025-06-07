@@ -79,11 +79,18 @@ module.exports.uploadFile =[
 ]
 
 module.exports.showFile = async (req, res) => {
-        const userPosts = await postServices.getFile();
-        if(!userPosts){
-            return serverError(res);
+    const skip = Number(req.query.skip) || 0 ;
+    const limit =  Number(req.query.limit) || 2;
+        try {
+        const userPosts = await postServices.getFile({ skip, limit });
+        if (!userPosts || userPosts.length === 0) {
+            return res.status(200).json([]); // No more posts
         }
-        res.status(201).json(userPosts);
+        res.status(200).json(userPosts); // ✅ Use 200 OK
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error while fetching posts." });
+    }
     };
 
 module.exports.getPost = async(req,res) => {
@@ -148,7 +155,7 @@ module.exports.likePost = async (req, res) => {
             return serverError(res);
         }
         const index = post.likecount.indexOf(id);
-
+        
         if (index === -1) {
             post.likecount.push(id); // Like
         } else {

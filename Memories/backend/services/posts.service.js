@@ -21,9 +21,9 @@ module.exports.createFile = async({creator, title, message, tags,owner, path, or
     }
 }
 
-module.exports.getFile = async() => {
+module.exports.getFile = async({skip,limit}) => {
     try {
-        const file =  await postModel.find();
+        const file =  await postModel.find().skip(skip).limit(limit);
         return file;
     } catch (error) {
         throw new Error("Require all Fields");

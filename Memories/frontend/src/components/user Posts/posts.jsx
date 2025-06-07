@@ -3,8 +3,8 @@ import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
 import {Link} from 'react-router-dom';
 import { Delete, Like, LikeFill, Menu, Close, EditIcon } from '../Icons/Icons.jsx';
-import useData from '../../utils/api';
 import SigninAlert from '../SigninAlert.jsx';
+import useData from '../../utils/api';
 
 const posts = (props) => {
     const {setPostData,userData} = useContext(DataContext);
@@ -24,8 +24,11 @@ const posts = (props) => {
           withCredentials: true,
         }
       );
-      setProgress(76)
-      const {getData}=useData(setPostData);
+      setTimeout(() => {
+        setProgress(76)
+      },2000);
+      const {getData}=useData(setPostData,props?.limit-1);
+      getData();
       getData();
       setProgress(100)
     };
@@ -44,7 +47,7 @@ const posts = (props) => {
           withCredentials: true,
         }
       );
-      const {getData}=useData(setPostData);
+      const {getData}=useData(setPostData,props?.limit);
       getData();
     }
     return (
@@ -59,20 +62,20 @@ const posts = (props) => {
         </div>
         <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-51 md:max-w-80 h-auto overflow-clip'>
           <img className='static bg-black opacity-70 rounded-md h-40 object-cover' src={props.data.ImageUrl} />
-          <div className='top-2 left-5 absolute flex justify-between text-white w-full pr-2'>
+          <div className='top-2 left-5 absolute flex justify-between pr-2 w-full text-white'>
             <div className='flex flex-col justify-center items-start'>
                 <div className='font-bold text-gray-200'>{props.data.creator}</div>
                 <div>{props.data.createdAt}</div>
             </div>
-            <div className='text-white w-10 h-10 m-1' onClick={()=>setShowPost(!showPost)}>
+            <div className='m-1 w-10 h-10 text-white' onClick={()=>setShowPost(!showPost)}>
                 <Menu/>
             </div>
           </div>
             <div className={`${showPost?'bottom-0':'-bottom-40'} p-4 rounded-md bg-zinc-800 absolute flex flex-col gap-2 justify-start w-full h-1/2 transition-(bottom) duration-200 ease-in-out`}>
-                <Link to={'/edit/'+props.data._id} className='w-full h-8 hover:bg-zinc-700 rounded-md flex justify-between items-center px-2'><EditIcon/>Edit
+                <Link to={'/edit/'+props.data._id} className='flex justify-between items-center hover:bg-zinc-700 px-2 rounded-md w-full h-8'><EditIcon/>Edit
                 </Link>
-                <div className='border-b-2 border-zinc-600'></div>
-                <button onClick={() => {deletePost(props.data._id)}} className='w-full rounded-md h-8 hover:bg-zinc-700 flex justify-between items-center px-2 text-red-500'>
+                <div className='border-zinc-600 border-b-2'></div>
+                <button onClick={() => {deletePost(props.data._id)}} className='flex justify-between items-center hover:bg-zinc-700 px-2 rounded-md w-full h-8 text-red-500'>
                     <Delete/> Delete
                 </button>
             </div>

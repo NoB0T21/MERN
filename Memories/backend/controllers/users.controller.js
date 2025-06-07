@@ -1,6 +1,7 @@
 const googleUserServices = require('../services/google.user.service');
 const userServices = require('../services/user.service');
 const userModel = require('../models/user.model')
+const googleServices = require('../services/google.user.service')
 const jwt = require('jsonwebtoken')
 
 function serverError(res){
@@ -42,9 +43,10 @@ module.exports.googleUserSignin = async (req,res) => {
 }
 
 module.exports.getgoogleuser = async (req,res) => {
-    const user = await googleUserServices.getGoogleUsers()
+    const userId = req.params.id;
+    let user = await googleUserServices.getGoogleUsers({userId})
     if(!user){
-        return serverError(res)
+        user = await userServices.findUserbyId({userId})
     }
     res.json(user)
 }
@@ -161,3 +163,43 @@ module.exports.logoutUser = async (req,res) => {
         res.status(500).json({ error: 'Server error' });
     }
 }
+
+module.exports.follow = async (req, res) => {
+    const userId = req.params.id;
+    const id = req.user
+    if (!userId) {
+        return notFound(res);
+    }
+    try {
+        let user = await userServices.findUserbyId({userId});
+        if(!user){
+            user = await googleServices.findUserbyId2({userId});
+        }
+        let follower = await userServices.findUserbyId2({id});
+        if(!follower){
+            follower = await googleServices.findUserbyId({id});
+        }
+
+        if(!user){
+            return serverError(res);
+        }
+        const index = user.followers.indexOf(id);
+        const index2 = follower.following.indexOf(userId);
+        
+        if (index === -1 && index2 === -1) {
+            user.followers.push(id);
+            follower.following.push(userId); // Like
+        } else {
+            user.followers.splice(index, 1);
+            follower.following.splice(index2, 1); // Unlike
+        }
+        await user.save();
+        await follower.save();
+        return res.status(201).json({
+            message: "you Liked this post",
+            success:true
+        })
+    } catch (error) {
+        return serverError(res);
+    };
+};

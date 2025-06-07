@@ -1,33 +1,14 @@
 import { useContext, useState } from 'react';
 import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
-import {Link} from 'react-router-dom';
-import { Like, LikeFill, Menu, Close } from '../Icons/Icons.jsx';
+import { Like, LikeFill, Close } from '../Icons/Icons.jsx';
 import useData from '../../utils/api';
 import SigninAlert from '../SigninAlert.jsx';
 
 const post = (props) => {
-  const {setPostData,userData} = useContext(DataContext);
+  const {setPostData,userData,setUserData} = useContext(DataContext);
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(false);
-
-  const deletePost = async (id) => {
-    setProgress(10)
-    setProgress(54)
-    const token = localStorage.getItem('token');
-    const data = await api.post(`${import.meta.env.VITE_BASE_URL}/delete/${id}`,{},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
-      }
-    );
-    setProgress(76)
-    const {getData}=useData(setPostData);
-    getData();
-    setProgress(100)
-  };
 
   const likePost = async () => {
     const token = localStorage.getItem('token');
@@ -35,7 +16,7 @@ const post = (props) => {
       setShow(true)
       return
     }
-    const data = await api.get(`${import.meta.env.VITE_BASE_URL}/like/${props.data._id}`,
+    const data = await api.get(`/like/${props.data._id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -43,9 +24,35 @@ const post = (props) => {
         withCredentials: true,
       }
     );
-    const {getData}=useData(setPostData);
+    const {getData}=useData(setPostData,props?.limit);
     getData();
   }
+
+  const follow = async () => {
+    const token = localStorage.getItem('token');
+    if(!token){
+      setShow(true)
+      return
+    }
+    const data = await api.get(`/user/follow/${props.data.owner}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    const user = await api.get(`/user/user/${userData._id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    setUserData(user.data)
+  }
+
   return (
     <>
       <div className="top-0 absolute w-full max-w-xl">
@@ -63,8 +70,13 @@ const post = (props) => {
           <div>{props.data.createdAt}</div>
         </div>
         <div className='top-2 right-1 absolute text-white'>
-          <div>
-            <Menu/>
+          <div className='px-2 py-1'>
+            {userData._id===props.data.owner ? 
+            'hello' : <>
+              <div onClick={() =>follow()} className="flex items-center gap-1 px-2 border-1 rounded-md cursor-pointer">
+                {userData.following?.includes(props.data?.owner) ? 'following' : 'follow'}
+              </div>
+            </>}
           </div>
         </div>
         <div className='static flex justify-between mx-5 mt-1 px-2 py-2'>{props.data.tags}</div>
@@ -72,7 +84,7 @@ const post = (props) => {
         <div className='flex mx-5 px-2 font-medium text-xl'>{props.data.message}</div>
         <div className='static flex justify-between px-2 py-3'>
           <button onClick={() =>likePost()} className="flex items-center gap-1">
-            {props.data.likecount?.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
+            {props.data.likecount?.includes(userData?._id) ? < LikeFill/> : < Like/>}
             <span>{props.data.likecount?.length}</span>
           </button>
         </div>

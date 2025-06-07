@@ -107,8 +107,7 @@ const Form = () => {
         setTimeout(() => {
           const {getData}=useData(setPostData);
           getData();
-          getData();
-        },3000);
+        },2000);
         
         if(response === undefined){
           const err = 'server is closed';

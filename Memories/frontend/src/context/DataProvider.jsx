@@ -8,6 +8,7 @@ const DataProvider = ({children}) => {
   const {getData} = useData(setPostData);
   useEffect(() => {
     getData();
+    getData();
   }, [location.pathname]);
   
   return (
