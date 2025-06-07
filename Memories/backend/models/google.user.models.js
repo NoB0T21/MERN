@@ -16,7 +16,15 @@ const formSchema = mongoose.Schema({
     sub: {
         required: true,
         type: String
-    }
+    },
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    }],
+    following: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    }]
 })
 
 const googleUser = mongoose.model('Google Signin', formSchema)

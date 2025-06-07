@@ -14,7 +14,7 @@ const Header = () => {
           <h1 className='font-bold text-4xl md:text-5xl'>Memories</h1>
         </div>
         <div className='hidden md:flex justify-end items-center mx-8 w-1/2'>
-          {userData ?<Profile value={userData}/> : <Link className='bg-indigo-600 p-2 rounded-sm w-20 xl:w-30 text-xl' to={'/user'}>sign in</Link>}
+          {userData?._id ?<Profile value={userData}/> : <Link className='bg-indigo-600 p-2 rounded-sm w-20 xl:w-30 text-xl' to={'/user'}>sign in</Link>}
         </div>
       </div>
     </>

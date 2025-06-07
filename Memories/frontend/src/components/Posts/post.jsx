@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
 import {Link} from 'react-router-dom';
-import { Delete, Like, LikeFill, Menu, Close } from '../Icons/Icons.jsx';
+import { Like, LikeFill, Menu, Close } from '../Icons/Icons.jsx';
 import useData from '../../utils/api';
 import SigninAlert from '../SigninAlert.jsx';
 
@@ -63,9 +63,9 @@ const post = (props) => {
           <div>{props.data.createdAt}</div>
         </div>
         <div className='top-2 right-1 absolute text-white'>
-          <Link to={'/edit/'+props.data._id}>
+          <div>
             <Menu/>
-          </Link>
+          </div>
         </div>
         <div className='static flex justify-between mx-5 mt-1 px-2 py-2'>{props.data.tags}</div>
         <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
@@ -74,9 +74,6 @@ const post = (props) => {
           <button onClick={() =>likePost()} className="flex items-center gap-1">
             {props.data.likecount?.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
             <span>{props.data.likecount?.length}</span>
-          </button>
-          <button onClick={() => {deletePost(props.data._id)}} className='text-red-500'>
-            <Delete/>
           </button>
         </div>
       </div>

@@ -23,7 +23,7 @@ const Form = () => {
   const [show, setShow] = useState(false);
   const [isloding, SetIsloding] = useState(false);
   const [formDatas, setFormData] = useState({
-    name:userData.name, title:'',message:'',tags:'',owner:userData._id
+    name:userData.name||userData.firstName+' '+userData.lastName, title:'',message:'',tags:'',owner:userData._id
   })
   
   const error1 = (err) => toast.error(`${err}`, {
@@ -78,10 +78,6 @@ const Form = () => {
     }
     
     SetIsloding(true);
-     if(userData.firstName === undefined){
-       const names = userData.firstName+' ' + userData.lastName
-       setFormData({...formDatas, name: names})
-     }
 
     const formData = new FormData();
     formData.append('creator', formDatas.name);
@@ -130,7 +126,7 @@ const Form = () => {
         setShow(false);
         SetIsloding(false);
         setProgress('');
-        setFormData({name:userData.name,title:'',message:'',tags:'',owner:userData._id})
+        setFormData({name:userData.name||userData.firstName+' '+userData.lastName,title:'',message:'',tags:'',owner:userData._id})
       }
     }
   };
@@ -142,7 +138,7 @@ const Form = () => {
     setShow(false);
     SetIsloding(false);
     setProgress('');
-    setFormData({name:userData.name,title:'',message:'',tags:'',owner:userData._id})
+    setFormData({name:userData.name||userData.firstName+' '+userData.lastName,title:'',message:'',tags:'',owner:userData._id})
 }
 
   return (
@@ -190,7 +186,7 @@ const Form = () => {
         </button>
         <Link to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData.picture} alt='profile' /></Link>
       </div>
-      <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full transition-(top) duration-300 ease-in-out`}>
+      <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full z-1 transition-(top) duration-300 ease-in-out`}>
         <div className='flex justify-end'>
           <button onClick={() => setShow(false)}>
             <Close/>

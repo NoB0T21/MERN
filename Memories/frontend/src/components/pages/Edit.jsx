@@ -1,9 +1,10 @@
 import { useContext, useEffect, useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import {api} from '../../utils/api.js';
-import useData from '../../utils/api.js';
 import { ToastContainer, toast } from 'react-toastify';
 import { DataContext } from '../../context/DataProvider';
+import { EditIcon } from '../Icons/Icons.jsx';
+import useData from '../../utils/api.js';
 
 
 const Edit = () => {
@@ -128,11 +129,9 @@ const Edit = () => {
           <input onChange={(e) => {setMessage(e.target.value)}} value={message} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="message" placeholder="Message"/>
           <input onChange={(e) => {setTags(e.target.value)}} value={tags} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="tags" placeholder="Tags"/>
           <button onClick={uploadFiles} className="flex justify-center items-center gap-2 bg-indigo-500 hover:bg-indigo-700 mt-3 p-2 rounded-md w-full" type="submit" value="Upload">
-          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" className="bi bi-pencil-square" viewBox="0 0 16 16">
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-            <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-          </svg>
-            <h1 className='font-semibold text-[1.2rem]'>Edit Post</h1></button>
+            <EditIcon/>
+            <h1 className='font-semibold text-[1.2rem]'>Edit Post</h1>
+          </button>
         <button onClick={clear} className="flex justify-center items-center gap-2 bg-red-400 hover:bg-red-600 mt-3 p-2 rounded-md w-full" type="submit" value="Upload"><h1 className='font-semibold text-[1.2rem]'>Cancle</h1></button>
         </form>
         <ToastContainer/>

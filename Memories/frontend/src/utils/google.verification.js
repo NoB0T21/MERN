@@ -23,11 +23,8 @@ export const verifyGoogleToken = async (token) => {
             );
             return user.data;
         } catch (err) {
-            console.error(err);
         }
     } catch (error) {
-        localStorage.removeItem('token')
-        window.location.replace('/user');
     }
 }
 

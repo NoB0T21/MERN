@@ -19,14 +19,27 @@ const formSchema = mongoose.Schema({
         required: true,
         type: String
     },
+    picture: {
+        required: true,
+        type: String
+    },
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    }],
+    following: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    }]
 });
 
 formSchema.methods.generateToken=  function(){
     const token = jwt.sign({
-        id: this._id,
+        _id: this._id,
         email: this.email,
         firstName: this.firstName,
-        lastName: this.lastName
+        lastName: this.lastName,
+        picture: this.picture
     },process.env.JWT_SECRET,{expiresIn: '1d',})
     return token
 };

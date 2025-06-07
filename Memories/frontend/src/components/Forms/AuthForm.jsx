@@ -20,6 +20,7 @@ const AuthForm = () => {
         firstName: '',
         lastName: '',
         email: '',
+        picture:'',
         password: '',
         confirm: ''
     })
@@ -100,6 +101,14 @@ const AuthForm = () => {
                 />
                 <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
                 <span>Email</span>
+                </label>
+            </div>
+            <div className="relative w-full">
+                <input type='email' value={formData.picture} onChange={(e) => {setFormData({...formData, picture: e.target.value});}} required autoComplete="off"
+                    className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
+                />
+                <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+                <span>Profile Pic</span>
                 </label>
             </div>
             <div className="relative w-full">

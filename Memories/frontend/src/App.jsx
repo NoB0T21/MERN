@@ -7,6 +7,7 @@ import Posts from './components/Posts/Posts';
 import Form from './components/Forms/Form';
 import Unauth from './components/Unauth';
 import Filler from './components/Filler';
+import UserPosts from './components/user Posts/PostsGrid';
 import './App.css';
 import { DataContext } from './context/DataProvider';
 import Profile from './components/pages/Profile';
@@ -66,7 +67,16 @@ function App() {
       <Route
         path='/user/Profile'
         element={user ? <Profile/> : <Navigate to='/user'/>}
-      />
+      >
+        <Route
+          path='/user/Profile'
+          element= {<UserPosts/>}
+        />
+        <Route
+          path='/user/Profile/future'
+          element= {<Form/>}
+        />
+      </Route>
     </Routes>
   );
 }

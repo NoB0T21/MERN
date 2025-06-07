@@ -64,7 +64,7 @@ module.exports.googleUser = async (req,res) => {
 
 
 module.exports.createusers = async (req,res) => {
-    const {firstName,lastName,email,password}=req.body
+    const {firstName,lastName,email,picture,password}=req.body
     if(!firstName||!lastName||!email||!password){
         notFound(res)
     }
@@ -81,7 +81,7 @@ module.exports.createusers = async (req,res) => {
         }catch(error){return res.status(401).json({ error: 'No access token provided' });}
     }catch{}
     const hashpassword = await userModel.hashpassword(password)
-    const user  = await userServices.createUser({firstName,lastName,email,password: hashpassword})
+    const user  = await userServices.createUser({firstName,lastName,email,picture,password: hashpassword})
     if(!user){
         return serverError(res)
     }
@@ -128,11 +128,14 @@ module.exports.verifyUser = async (req,res) => {
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        user = decoded
+        if (!decoded) {
+            return res.status(401).json({ error: 'Token not found' });
+        }
+        const user = await userServices.findUser({email: decoded.email})
+        res.json(user)
     } catch (error) {
         return res.status(401).json({ error: 'Token not found' });
     }
-    res.json(user)
 }
 
 module.exports.tokenUser = async (req,res) => {

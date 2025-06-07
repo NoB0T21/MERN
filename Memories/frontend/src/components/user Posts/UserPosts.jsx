@@ -1,36 +1,15 @@
-import { useState,useContext, useEffect } from 'react'
-import { DataContext } from '../../context/DataProvider';
-import { api } from '../../utils/api';
-import Post from '../Posts/post'
+import { Outlet } from 'react-router-dom';
+import ProfileNav from '../User Profile/ProfileNav';
+import UserProfile from '../User Profile/UserProfile';
 
 const UserPosts = () => {
-    const {userData} = useContext(DataContext);
-    const [posts,setPosts] = useState([])
-    if(!userData.email){}
-
-    useEffect(()=>{
-      const fun = async () => {
-        const token = localStorage.getItem('token');
-        const data = await api.get(`/profile/${userData._id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            withCredentials: true,
-          }
-        )
-        setPosts(data.data)
-      }
-      fun()
-    },[location.pathname])
-
   return (
     <>
-      <div className='flex justify-center md:justify-start items-start gap-8 mt-3 md:mx-20 2xl:mx-55 xl:mx-25 rounded-lg h-[95vh] md:h-[90vh]'>
-        <div className="w-full h-[83%] justify-center items-start rounded-lg flex flex-wrap gap-8 overflow-auto">
-          <div className='bg-red-600 w-full h-40 md:h-50'>profile</div>
-          <div className='bg-yellow-600 w-full h-20 sticky top-0 z-1'>profile</div>
-          {posts.slice().reverse().map((e) => {return <Post key={e._id} data={e} />})}
+      <div className='w-full flex justify-center md:justify-start md:items-start mt-3 rounded-lg h-[95vh] md:h-[100vh]'>
+        <div className="w-full h-[83%] justify-center items-start rounded-lg flex flex-wrap gap-6 overflow-auto">
+          <div className='w-full h-18 md:h-50'><UserProfile/></div>
+          <div className=' w-full h-10 md:h-15 sticky top-0 z-1 rounded-t-sm bg-[#19191c] border-b-1 m-0 border-zinc-800 p-0'><ProfileNav/></div>
+          <div className='w-full h-full'><Outlet/></div>
         </div>
       </div>
     </>

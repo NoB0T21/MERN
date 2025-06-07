@@ -9,12 +9,12 @@ module.exports.findUser = async ({email}) => {
     }
 }
 
-module.exports.createUser = async ({firstName,lastName,email,password}) => {
+module.exports.createUser = async ({firstName,lastName,email,picture,password}) => {
     if(!firstName ||!firstName || !email || !password ){
         throw new Error("Require all Fields");
     }
     try {
-        const user = await userModel.create({firstName,lastName,email,password});
+        const user = await userModel.create({firstName,lastName,email,picture,password});
         return user;
     } catch (error) {
         throw new Error(error)
