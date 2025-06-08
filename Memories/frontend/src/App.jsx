@@ -11,6 +11,7 @@ import UserPosts from './components/user Posts/PostsGrid';
 import './App.css';
 import { DataContext } from './context/DataProvider';
 import Profile from './components/pages/Profile';
+import Explore from './components/pages/Explore';
 
 function App() {
   const location = useLocation();
@@ -44,14 +45,13 @@ function App() {
     <Routes>
       <Route
         path="/"
-        element={<Home/>}
+        element={user ?<Home/>:<Navigate to="/user" />}
       >
         <Route
           index
           element={
             <>
               <Posts />
-              {user ? <Form /> : <Filler />}
             </>
           }
         />
@@ -59,6 +59,10 @@ function App() {
           path="edit/:_id"
           element={user ? <Edit /> : <Navigate to="/user" />}
         />
+        <Route
+          path="/explore"
+          element={user ? <Explore /> : <Navigate to="/user" /> }
+        ></Route>
       </Route>
       <Route
         path="/user"
@@ -77,6 +81,7 @@ function App() {
           element= {<Form/>}
         />
       </Route>
+      
     </Routes>
   );
 }

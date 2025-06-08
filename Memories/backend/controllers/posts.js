@@ -93,6 +93,23 @@ module.exports.showFile = async (req, res) => {
     }
     };
 
+module.exports.showPost = async (req, res) => {
+    const page = Number(req.query.skip) || 0 ;
+    const limit =  Number(req.query.limit) || 2;
+     const ids = req.body;
+     const skip = (page - 1) * limit;
+        try {
+        const userPosts = await postServices.getPost({ skip, limit,ids });
+        if (!userPosts || userPosts.length === 0) {
+            return res.status(200).json([]); // No more posts
+        }
+        res.status(200).json(userPosts); // ✅ Use 200 OK
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error while fetching posts." });
+    }
+    };
+
 module.exports.getPost = async(req,res) => {
     userId = req.params.id;
     console.log(userId)

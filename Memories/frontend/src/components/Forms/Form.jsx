@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { DataContext } from '../../context/DataProvider.jsx';
 import { PulseLoader } from "react-spinners";
 import {z} from 'zod';
-import {ImageFill, Upload, Upload2, Close} from '../Icons/Icons.jsx';
+import {ImageFill, Upload, Upload2, Close, Home, HomeFill, Globe, GlobeFill} from '../Icons/Icons.jsx';
 import {Link} from 'react-router-dom'
 import useData from '../../utils/api.js';
 import axios from 'axios';
@@ -23,7 +23,7 @@ const Form = () => {
   const [show, setShow] = useState(false);
   const [isloding, SetIsloding] = useState(false);
   const [formDatas, setFormData] = useState({
-    name:userData.name||userData.firstName+' '+userData.lastName, title:'',message:'',tags:'',owner:userData._id
+    name:userData?.name||userData?.firstName+' '+userData?.lastName, title:'',message:'',tags:'',owner:userData?._id
   })
   
   const error1 = (err) => toast.error(`${err}`, {
@@ -179,11 +179,12 @@ const Form = () => {
         <ToastContainer/>
       </div>
       <div className='md:hidden bottom-0 absolute flex justify-between items-center bg-zinc-600 px-5 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
-        <Upload2/>
+        <Link className={`${location.pathname==='/'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/'}>{location.pathname === '/' ? <HomeFill/>:<Home/>}</Link>
+        <Link className={`${location.pathname==='/explore'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/explore'}>{location.pathname === '/' ? <GlobeFill/>:<Globe/>}</Link>
         <button className='flex justify-center items-center' onClick={() => setShow(true)}>
           <Upload2/>
         </button>
-        <Link to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData.picture} alt='profile' /></Link>
+        <Link className={`${location.pathname==='/user/profile'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData?.picture} alt='profile' /></Link>
       </div>
       <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full z-1 transition-(top) duration-300 ease-in-out`}>
         <div className='flex justify-end'>

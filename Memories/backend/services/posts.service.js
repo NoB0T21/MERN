@@ -30,6 +30,15 @@ module.exports.getFile = async({skip,limit}) => {
     }
 }
 
+module.exports.getPost = async({skip,limit,ids}) => {
+    try {
+        const file =  await postModel.find({owner: {$in: ids}}).skip(skip).limit(limit);
+        return file;
+    } catch (error) {
+        throw new Error("Require all Fields");
+    }
+}
+
 module.exports.getuserposts = async({userId}) => {
     try {
         const file =  await postModel.find({owner: userId});
