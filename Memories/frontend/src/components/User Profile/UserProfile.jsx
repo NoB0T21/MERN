@@ -24,20 +24,20 @@ const UserProfile = () => {
     },[location.pathname,postData])
 
   return (
-    <div className=" w-full h-full">
-        <div className="h-full w-full flex justify-between items-center gap-5 px-3">
-            <img className="w-18 h-18 md:w-25 md:h-25 rounded-full" src={userData.picture} />
-            <div className="text-md md:text-xl flex items-start flex-col">
+    <div className="w-full h-full">
+        <div className="flex justify-between xl:justify-start items-center gap-5 xl:gap-20 px-3 w-full h-full">
+            <img className="rounded-full w-18 md:w-25 h-18 md:h-25" src={userData.picture} />
+            <div className="flex flex-col items-start text-md md:text-xl">
                 <h3 className="font-bold">{posts.length}</h3>
-                <p className=" font-semibold">posts</p>
+                <p className="font-semibold">posts</p>
             </div>
-            <div className="text-md md:text-xl flex items-start flex-col">
+            <div className="flex flex-col items-start text-md md:text-xl">
                 <h3 className="font-bold">{userData.followers.length}</h3>
-                <p className=" font-semibold">followers</p>
+                <p className="font-semibold">followers</p>
             </div>
-            <div className="text-md md:text-xl flex items-start flex-col">
+            <div className="flex flex-col items-start text-md md:text-xl">
                 <h3 className="font-bold">{userData.following.length}</h3>
-                <p className=" font-semibold">following</p>
+                <p className="font-semibold">following</p>
             </div>
         </div>
     </div>

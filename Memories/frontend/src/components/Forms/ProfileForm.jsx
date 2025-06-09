@@ -13,7 +13,7 @@ const formSchema = z.object({
   files: z.instanceof(File, { message: 'A valid file is required' }),
 });
 
-const Form = () => {
+const ProfileForm = () => {
   const {setPostData,userData} = useContext(DataContext);
   const [progress, setProgress] = useState('');
   const [files, setFiles] = useState([]);
@@ -170,7 +170,7 @@ const Form = () => {
 
   return (
     <>
-      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 shadow-xl mx-10 md:mx-20 2xl:mx-55 xl:mx-25 p-3 rounded-md w-70 lg:w-120 max-w-130 h-115 xl:h-120 max-h-150'>
+      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 shadow-xl p-3 rounded-md w-55 lg:w-90 max-w-130 h-115 xl:h-120 max-h-150'>
         <h2 className='font-semibold text-2xl'>Create a Memory</h2>
         <form className="flex flex-col justify-center items-center gap-3 px-2 w-full text-white">
           <div className="relative w-full">
@@ -288,4 +288,5 @@ const Form = () => {
   )
 };
 
-export default Form;
+export default ProfileForm;
+

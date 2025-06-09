@@ -25,7 +25,7 @@ const PostsGrid = () => {
       fun()
     },[location.pathname,postData])
   return (
-    <><div className='flex gap-8 flex-wrap w-full'>{posts.slice().reverse().map((e) => {return <Post key={e._id} data={e} />})}</div></>
+    <><div className='flex flex-wrap justify-center md:justify-start gap-5 w-full'>{posts.slice().reverse().map((e) => {return <Post key={e._id} data={e} />})}</div></>
   )
 }
 

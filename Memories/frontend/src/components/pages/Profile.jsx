@@ -1,18 +1,18 @@
 import Header from '../Header'
-import MobileNav from '../Forms/Form'
-import Posts from '../user Posts/UserPosts'
+import ProfileForm from '../Forms/ProfileForm'
+import UserPosts from '../user Posts/UserPosts'
 
 const Profile = () => {
   return (
         <div className=''>
           <Header/>
-          <div className='flex justify-between mx-5 mt-[15px] md:ml-20 overflow-hidden'>
-              <div className='flex flex-col w-full md:w-1/2 h-full overflow-hidden'>
-                  <Posts/>      
+          <div className='flex justify-between gap-2 mx-5 md:mx-20 mt-[15px] overflow-hidden'>
+              <div className='flex w-full h-full overflow-hidden'>
+                  <UserPosts/>      
               </div>
-              <div className='hidden md:flex'><MobileNav/></div>
+              <div className='hidden md:flex'><ProfileForm/></div>
           </div>
-          <div className='md:hidden flex'><MobileNav/></div>
+          <div className='md:hidden flex'><ProfileForm/></div>
         </div>
   )
 }

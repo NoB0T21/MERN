@@ -67,7 +67,7 @@ const GoogleForm = () => {
             />
         </div>
         </div>
-        <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mt-3 w-1/2 h-10 hover:scale-[1.05] transition-all ease-in-out'>Google</button>
+        <button onClick={() => handleGoogleLogin()} className='items-center bg-linear-to-r/decreasing from-indigo-700 to-teal-400 mx-3 mt-3 w-[92] h-10 hover:scale-[1.05] transition-all ease-in-out'>Google</button>
     </>
   )
 }

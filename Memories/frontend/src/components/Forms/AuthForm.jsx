@@ -72,7 +72,7 @@ const AuthForm = () => {
   return (
     <div className='flex flex-col justify-center gap-2 bg-zinc-700 rounded-md w-100 lg:w-120'>
         <h1 className='my-4 font-semibold text-3xl'>{isSignin ? 'Sign In' : 'Sign Up'}</h1>
-        <form className='flex flex-col gap-3 mx-3'onSubmit={handleSubmit} noValidate>
+        <form className='flex flex-col gap-3 mx-3 w-[94]'onSubmit={handleSubmit} noValidate>
         { !isSignin &&
             <div className='flex justify-between gap-3'>
                 <div className="relative w-full">
@@ -136,8 +136,8 @@ const AuthForm = () => {
                 </div>
             </div>
             </>}
-            <div className='flex flex-row items-start gap-2 w-full'>
-                <button type='submit' disabled={ isLoding||(!isSignin && (pass === '' || pass == "false")||(isSignin && (!form)))} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-1/2 h-10 transition-all ease-in-out'>{!isLoding&& (isSignin ? 'Sign In' : 'Sign Up')}{isLoding && <PulseLoader color="#fff"/>}</button>
+            <div className='flex w-full'>
+                <button type='submit' disabled={ isLoding||(!isSignin && (pass === '' || pass == "false")||(isSignin && (!form)))} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-full h-10 transition-all ease-in-out'>{!isLoding&& (isSignin ? 'Sign In' : 'Sign Up')}{isLoding && <PulseLoader color="#fff"/>}</button>
             </div>
         </form>
         <GoogleOAuthProvider clientId={googleID}>

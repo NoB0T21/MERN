@@ -23,7 +23,6 @@ module.exports.uploadFile =[
     async (req, res) => {
         const { file } = req;
         const {creator, title, message, tags, owner} = req.body;
-
         if (!file || !creator) {
             return notFound(res);
         }
@@ -53,12 +52,12 @@ module.exports.uploadFile =[
                 if (urlError) {
                     return serverError(res);
                 }
-
+                const parsedTags = JSON.parse(tags);
                 const newFile = await postServices.createFile({
                     creator,
                     title,
                     message,
-                    tags,
+                    tags: parsedTags,
                     owner,
                     path: uniqueFilename,
                     originalname: file.originalname,
@@ -80,7 +79,7 @@ module.exports.uploadFile =[
 
 module.exports.showFile = async (req, res) => {
     const skip = Number(req.query.skip) || 0 ;
-    const limit =  Number(req.query.limit) || 2;
+    const limit =  Number(req.query.limit) || 4;
         try {
         const userPosts = await postServices.getFile({ skip, limit });
         if (!userPosts || userPosts.length === 0) {
@@ -95,7 +94,7 @@ module.exports.showFile = async (req, res) => {
 
 module.exports.showPost = async (req, res) => {
     const page = Number(req.query.skip) || 0 ;
-    const limit =  Number(req.query.limit) || 2;
+    const limit =  Number(req.query.limit) || 4;
      const ids = req.body;
      const skip = (page - 1) * limit;
         try {

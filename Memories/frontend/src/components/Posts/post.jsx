@@ -64,7 +64,8 @@ const post = (props) => {
         </div>
       </div>
       <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
-        <img className='static bg-black opacity-70 rounded-md h-65 object-cover' src={props.data.ImageUrl} />
+        <div className='flex flex-col'>
+          <img className='static bg-black opacity-70 rounded-md h-65 object-cover' src={props.data.ImageUrl} />
         <div className='top-2 left-5 absolute flex flex-col justify-center items-start text-white'>
           <div className='font-bold text-gray-200'>{props.data.creator}</div>
           <div>{props.data.createdAt}</div>
@@ -79,9 +80,16 @@ const post = (props) => {
             </>}
           </div>
         </div>
-        <div className='static flex justify-between mx-5 mt-1 px-2 py-2'>{props.data.tags}</div>
-        <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
-        <div className='flex mx-5 px-2 font-medium text-xl'>{props.data.message}</div>
+        <div className='flex flex-col flex-start gap-2'>
+              <div className='flex justify-start mx-1mt-1 p-1'>{props.data.tags.map((tag, index) => (
+                    <span key={index} className="flex items-center mx-1 rounded-md text-blue-500 hover:text-blue-600 text-sm hover:underline hover:underline-offset-1 cursor-pointer">
+                      {tag}
+                    </span>
+                  ))}</div>
+              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
+              <div className='mx-5 font-medium text-sm text-start truncate'>{props.data.message}</div>
+            </div>
+        </div>
         <div className='static flex justify-between px-2 py-3'>
           <button onClick={() =>likePost()} className="flex items-center gap-1">
             {props.data.likecount?.includes(userData?._id) ? < LikeFill/> : < Like/>}
