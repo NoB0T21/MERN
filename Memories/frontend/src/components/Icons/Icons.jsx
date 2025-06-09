@@ -110,14 +110,14 @@ export const GridFill = () => {
 
 export const Home = () => {
   return(
-    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-8 bi bi-house" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-8 md:w-7 bi bi-house" viewBox="0 0 16 16">
       <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
     </svg>
   )
 }
 export const HomeFill = () => {
   return(
-    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-8 bi bi-house-fill" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-8 md:w-7 bi bi-house-fill" viewBox="0 0 16 16">
       <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
       <path d="m8 3.293 6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293z"/>
     </svg>
@@ -126,14 +126,14 @@ export const HomeFill = () => {
 
 export const Globe = () => {
   return(
-    <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" className="w-8 bi bi-globe-central-south-asia" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" className="w-8 md:w-7 bi bi-globe-central-south-asia" viewBox="0 0 16 16">
       <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M4.882 1.731a.48.48 0 0 0 .14.291.487.487 0 0 1-.126.78l-.291.146a.7.7 0 0 0-.188.135l-.48.48a1 1 0 0 1-1.023.242l-.02-.007a1 1 0 0 0-.462-.04 7 7 0 0 1 2.45-2.027m-3 9.674.86-.216a1 1 0 0 0 .758-.97v-.184a1 1 0 0 1 .445-.832l.04-.026a1 1 0 0 0 .152-1.54L3.121 6.621a.414.414 0 0 1 .542-.624l1.09.818a.5.5 0 0 0 .523.047.5.5 0 0 1 .724.447v.455a.8.8 0 0 0 .131.433l.795 1.192a1 1 0 0 1 .116.238l.73 2.19a1 1 0 0 0 .949.683h.058a1 1 0 0 0 .949-.684l.73-2.189a1 1 0 0 1 .116-.238l.791-1.187A.45.45 0 0 1 11.743 8c.16 0 .306.084.392.218.557.875 1.63 2.282 2.365 2.282l.04-.001a7.003 7.003 0 0 1-12.658.905Z"/>
     </svg>
   )
 }
 export const GlobeFill = () => {
   return(
-    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-8 bi bi-globe-central-south-asia-fill" viewBox="0 0 16 16">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="w-8 md:w-7 bi bi-globe-central-south-asia-fill" viewBox="0 0 16 16">
       <path fill-rule="evenodd" d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0m0 1a7 7 0 0 0-3.115.73.48.48 0 0 0 .137.292.488.488 0 0 1-.126.78l-.292.145a.7.7 0 0 0-.187.136l-.48.48a1 1 0 0 1-1.023.242l-.02-.007a1 1 0 0 0-.461-.041A6.97 6.97 0 0 0 1 8a6.96 6.96 0 0 0 .883 3.403l.86-.213c.444-.112.757-.512.757-.971v-.184a1 1 0 0 1 .445-.832l.04-.026a1 1 0 0 0 .153-1.54L3.12 6.622a.415.415 0 0 1 .542-.624l1.09.817a.5.5 0 0 0 .523.047A.5.5 0 0 1 6 7.31v.455a.8.8 0 0 0 .13.432l.796 1.193a1 1 0 0 1 .116.238l.73 2.19a1 1 0 0 0 .949.683h.058a1 1 0 0 0 .949-.684l.73-2.189q.042-.127.116-.238l.791-1.187A.45.45 0 0 1 11.743 8c.16 0 .306.083.392.218.557.875 1.63 2.282 2.365 2.282l.04-.003A7 7 0 0 0 8 1"/>
     </svg>
   )

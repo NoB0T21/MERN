@@ -6,7 +6,6 @@ import Home from './components/pages/Home';
 import Posts from './components/Posts/Posts';
 import Form from './components/Forms/Form';
 import Unauth from './components/Unauth';
-import Filler from './components/Filler';
 import UserPosts from './components/user Posts/PostsGrid';
 import './App.css';
 import { DataContext } from './context/DataProvider';

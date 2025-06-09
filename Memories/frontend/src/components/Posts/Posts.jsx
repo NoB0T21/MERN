@@ -52,8 +52,8 @@ const Posts = () => {
   };
 
   return (
-    <div className='flex justify-center md:justify-start items-start gap-8 md:mx-20 2xl:mx-55 xl:mx-25 mt-3 rounded-lg h-[92.43vh] md:h-[90vh]'>
-      <div className="flex flex-wrap justify-center items-start gap-8 rounded-lg w-full h-[83%] overflow-scroll" onScroll={handleScroll}>
+    <div className='flex justify-center md:justify-start items-start gap-8 md:mr-10 2xl:mr-40 xl:mr-15 mt-3 rounded-lg h-full w-full'>
+      <div className="flex flex-wrap justify-center md:justify-start items-start gap-8 rounded-lg w-full h-full overflow-scroll" onScroll={handleScroll}>
         {poat.map((e) => (
           <Post key={e._id} data={e} limit={poat.length} />
         ))}

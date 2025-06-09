@@ -25,17 +25,17 @@ const UserProfile = () => {
 
   return (
     <div className=" w-full h-full">
-        <div className="h-full flex justify-between items-center gap-5 px-3">
-            <img className="w-20 h-20 md:w-40 md:h-40 rounded-full" src={userData.picture} />
-            <div className="text-md md:text-2xl flex items-start flex-col">
+        <div className="h-full w-full flex justify-between items-center gap-5 px-3">
+            <img className="w-18 h-18 md:w-25 md:h-25 rounded-full" src={userData.picture} />
+            <div className="text-md md:text-xl flex items-start flex-col">
                 <h3 className="font-bold">{posts.length}</h3>
                 <p className=" font-semibold">posts</p>
             </div>
-            <div className="text-md md:text-2xl flex items-start flex-col">
+            <div className="text-md md:text-xl flex items-start flex-col">
                 <h3 className="font-bold">{userData.followers.length}</h3>
                 <p className=" font-semibold">followers</p>
             </div>
-            <div className="text-md md:text-2xl flex items-start flex-col">
+            <div className="text-md md:text-xl flex items-start flex-col">
                 <h3 className="font-bold">{userData.following.length}</h3>
                 <p className=" font-semibold">following</p>
             </div>

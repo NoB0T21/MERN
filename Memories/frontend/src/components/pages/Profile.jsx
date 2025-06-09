@@ -7,7 +7,7 @@ const Profile = () => {
         <div className=''>
           <Header/>
           <div className='flex justify-between mx-5 mt-[15px] md:ml-20 overflow-hidden'>
-              <div className='flex flex-col gap-5 w-full md:w-1/2 h-full'>
+              <div className='flex flex-col w-full md:w-1/2 h-full overflow-hidden'>
                   <Posts/>      
               </div>
               <div className='hidden md:flex'><MobileNav/></div>
