@@ -5,22 +5,20 @@ const uuid = require('uuid-v4');
 const upload =  multer({ storage: multer.memoryStorage() });
 
 function serverError(res){
-    return res.status(404).json({
-        message: 'server error',
+    return res.status(500).json({
+        message: `Error code 500: server error`,
         success: false
     });
 };
 
 function notFound(res){
     return res.status(400).json({
-        message: 'Bad Request',
+        message: `Error code 400: Bad Request`,
         success: false
     });
 };
 
-module.exports.uploadFile =[
-    upload.single('file'),
-    async (req, res) => {
+module.exports.uploadFile =[ upload.single('file'), async (req, res) => {
         const { file } = req;
         const {creator, title, message, tags, owner} = req.body;
         if (!file || !creator) {
@@ -45,11 +43,11 @@ module.exports.uploadFile =[
             getFilePath();
 
             async function getFilePath() {
-                const { data, urlError } = await supabase
+                const { data, error } = await supabase
                     .storage
                     .from('images')
                     .getPublicUrl(`${uniqueFilename}`);
-                if (urlError) {
+                if (error) {
                     return serverError(res);
                 }
                 const parsedTags = JSON.parse(tags);
@@ -67,7 +65,7 @@ module.exports.uploadFile =[
                     return serverError(res);
                 }
                 return res.status(201).json({
-                    message: "USer created",
+                    message: "Post Created",
                     success:true
                 });
             };
@@ -77,65 +75,68 @@ module.exports.uploadFile =[
     }
 ]
 
-module.exports.showFile = async (req, res) => {
-    const skip = Number(req.query.skip) || 0 ;
-    const limit =  Number(req.query.limit) || 4;
-        try {
-        const userPosts = await postServices.getFile({ skip, limit });
-        if (!userPosts || userPosts.length === 0) {
-            return res.status(200).json([]); // No more posts
-        }
-        res.status(200).json(userPosts); // ✅ Use 200 OK
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error while fetching posts." });
+module.exports.getPost = async(req,res) => {
+    const userId = req.params.id;
+    if (!userId) {
+        return notFound(res);
     }
+    try {
+        const userPost = await postServices.getFiles({userId});
+        if(!userPost){
+            return res.status(204).json({message: 'Post not Found'})
+        }
+        res.status(200).json(userPost);
+    }catch(error){
+        return serverError(res);
+    }
+};
+
+module.exports.likePost = async (req, res) => {
+    const userId = req.params.id;
+    const id = req.user
+    if (!userId) {
+        return notFound(res);
+    }
+    try {
+        const post = await postServices.getFiles({userId});
+        if(!post){
+            return res.status(204).json({message:'Post Not Found'})
+        }
+        const index = post.likecount.indexOf(id);
+        
+        if (index === -1) {
+            post.likecount.push(id); // Like
+        } else {
+            post.likecount.splice(index, 1); // Unlike
+        }
+        await post.save();
+        return res.status(200).json({
+            message: "you Liked this post",
+            success:true
+        })
+    } catch (error) {
+        return serverError(res);
     };
+};
 
 module.exports.showPost = async (req, res) => {
     const page = Number(req.query.skip) || 0 ;
     const limit =  Number(req.query.limit) || 4;
-     const ids = req.body;
-     const skip = (page - 1) * limit;
-        try {
+    const ids = req.body;
+    const skip = (page - 1) * limit;
+    try {
         const userPosts = await postServices.getPost({ skip, limit,ids });
         if (!userPosts || userPosts.length === 0) {
-            return res.status(200).json([]); // No more posts
+            return res.status(204).json({message: 'Post not Found'})
         }
         res.status(200).json(userPosts); // ✅ Use 200 OK
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error while fetching posts." });
+        return serverError(res)
     }
-    };
-
-module.exports.getPost = async(req,res) => {
-    userId = req.params.id;
-    console.log(userId)
-    if (!userId) {
-        return notFound(res);
-    }
-    const userPost = await postServices.getFiles({userId});
-    if(!userPost){
-        return serverError(res);
-    }
-    res.status(201).json(userPost);
-};
-
-module.exports.getuserPosts = async(req,res) => {
-    userId = req.params.id;
-    if (!userId) {
-        return notFound(res);
-    }
-    const userPost = await postServices.getuserposts({userId});
-    if(!userPost){
-        return serverError(res);
-    }
-    res.status(201).json(userPost);
 };
 
 module.exports.updatePost =async (req, res) => {
-    postId = req.params.id;
+    const postId = req.params.id;
     const {title, message, tags} = req.body;
     if (!postId) {
         return notFound(res);
@@ -148,38 +149,10 @@ module.exports.updatePost =async (req, res) => {
             tags,
         });
         if(!post){
-            return serverError(res);
+            return res.status(204).json({message:'Post Not Found'})
         }
         return res.status(201).json({
-            message: "USer created",
-            success:true
-        })
-    } catch (error) {
-        return serverError(res);
-    };
-};
-
-module.exports.likePost = async (req, res) => {
-    const userId = req.params.id;
-    const id = req.user
-    if (!userId) {
-        return notFound(res);
-    }
-    try {
-        const post = await postServices.getFiles({userId});
-        if(!post){
-            return serverError(res);
-        }
-        const index = post.likecount.indexOf(id);
-        
-        if (index === -1) {
-            post.likecount.push(id); // Like
-        } else {
-            post.likecount.splice(index, 1); // Unlike
-        }
-        await post.save();
-        return res.status(201).json({
-            message: "you Liked this post",
+            message: "Post updated",
             success:true
         })
     } catch (error) {
@@ -188,13 +161,13 @@ module.exports.likePost = async (req, res) => {
 };
 
 module.exports.deleteFile = async(req,res) => {
-    userId = req.params.id;
+    const userId = req.params.id;
     if (!userId) {
         return notFound(res);
     }
     const user = await postServices.getFiles({userId});
     if (!user) {
-        return notFound(res);
+        return res.status(204).json({message:'Post Not Found'})
     }
     try {
         const {data, error } = await supabase
@@ -203,13 +176,43 @@ module.exports.deleteFile = async(req,res) => {
             .remove([user.path])
         const userPost = await postServices.deleteFiles({userId});
         if (!userPost) {
-            return notFound(res);
+            return serverError(res);
         }
         return res.status(201).json({
-            message: "USer created",
+            message: "Post deleted",
             success:true
         });
     } catch (error) {
         return serverError(res)
     };
+};
+
+module.exports.showFile = async (req, res) => {
+    const skip = Number(req.query.skip) || 0 ;
+    const limit =  Number(req.query.limit) || 4;
+    try {
+        const userPosts = await postServices.getFile({ skip, limit });
+        if (!userPosts || userPosts.length === 0) {
+            return res.status(204).json({message: 'Post not Found'})
+        }
+        return res.status(200).json(userPosts); // ✅ Use 200 OK
+    } catch (error) {
+        return serverError(res)
+    }
+};
+
+module.exports.getuserPosts = async(req,res) => {
+    const userId = req.params.id;
+    if (!userId) {
+        return notFound(res);
+    }
+    try {
+        const userPost = await postServices.getuserposts({userId});
+        if(!userPost){
+            return res.status(204).json({message:'Post Not Found'})
+        }
+        res.status(201).json(userPost);
+    } catch (error) {
+        return serverError(res)
+    }
 };

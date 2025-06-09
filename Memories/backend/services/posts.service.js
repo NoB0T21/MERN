@@ -17,34 +17,7 @@ module.exports.createFile = async({creator, title, message, tags,owner, path, or
         });
         return file;
     } catch (error) {
-        throw new Error("Require all Fields");
-    }
-}
-
-module.exports.getFile = async({skip,limit}) => {
-    try {
-        const file =  await postModel.find().skip(skip).limit(limit);
-        return file;
-    } catch (error) {
-        throw new Error("Require all Fields");
-    }
-}
-
-module.exports.getPost = async({skip,limit,ids}) => {
-    try {
-        const file =  await postModel.find({owner: {$in: ids}}).skip(skip).limit(limit);
-        return file;
-    } catch (error) {
-        throw new Error("Require all Fields");
-    }
-}
-
-module.exports.getuserposts = async({userId}) => {
-    try {
-        const file =  await postModel.find({owner: userId});
-        return file;
-    } catch (error) {
-        throw new Error("Require all Fields");
+        throw error
     }
 }
 
@@ -56,7 +29,25 @@ module.exports.getFiles = async({userId}) => {
         const file =  await postModel.findOne({_id: userId});
         return file;
     } catch (error) {
-        throw new Error("Require all Fields");
+        throw error
+    }
+}
+
+module.exports.getFile = async({skip,limit}) => {
+    try {
+        const file =  await postModel.find().skip(skip).limit(limit);
+        return file;
+    } catch (error) {
+        throw error
+    }
+}
+
+module.exports.getPost = async({skip,limit,ids}) => {
+    try {
+        const file =  await postModel.find({owner: {$in: ids}}).skip(skip).limit(limit);
+        return file;
+    } catch (error) {
+        throw error
     }
 }
 
@@ -72,7 +63,16 @@ module.exports.updateFile = async({postId, title, message, tags}) => {
         }, {new: true});
         return file;
     } catch (error) {
-        throw new Error("Require all Fields");
+        throw error
+    }
+}
+
+module.exports.getuserposts = async({userId}) => {
+    try {
+        const file =  await postModel.find({owner: userId});
+        return file;
+    } catch (error) {
+        throw error
     }
 }
 
@@ -84,6 +84,6 @@ module.exports.deleteFiles = async({userId}) => {
         const file =  await postModel.findOneAndDelete({_id: userId});
         return file;
     } catch (error) {
-        throw new Error("Require all Fields");
+        throw error
     }
 }

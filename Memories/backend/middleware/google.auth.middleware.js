@@ -16,7 +16,7 @@ const googleAuthMiddleware = async (req,res,next) => {
 
   const token = req.cookies.token
   if (!accessToken && !token) {
-    return res.json({ error: 'No access token provided' });
+    return res.status(401).json({ error: 'No access token provided' });
   }
 
   try {
@@ -34,7 +34,7 @@ const googleAuthMiddleware = async (req,res,next) => {
     }
     req.user = `${user}`;
     next();
-  } catch (err) {
+  }catch(err) {
     res.status(401).json({ error: 'Invalid access token' });
   }
 }
