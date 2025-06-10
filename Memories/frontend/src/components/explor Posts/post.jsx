@@ -82,11 +82,11 @@ const post = (props) => {
         </div>
         <div className='flex flex-col flex-start gap-2'>
               <div className='flex justify-start mx-1mt-1 p-1'>{props.data.tags.map((tag, index) => (
-                    <span key={index} className="flex items-center mx-1 rounded-md text-blue-500 hover:text-blue-600 text-sm hover:underline hover:underline-offset-1 cursor-pointer">
+                    <span key={index} className="flex flex-wrap items-center mx-1 rounded-md text-blue-500 hover:text-blue-600 text-sm hover:underline hover:underline-offset-1 cursor-pointer">
                       {tag}
                     </span>
                   ))}</div>
-              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
+              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl text-start truncate'>{props.data.title}</h1>
               <div className='mx-5 font-medium text-sm text-start truncate'>{props.data.message}</div>
             </div>
         </div>

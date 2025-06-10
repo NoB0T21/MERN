@@ -86,7 +86,7 @@ const posts = (props) => {
                       {tag}
                     </span>
                   ))}</div>
-              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
+              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl text-start truncate'>{props.data.title}</h1>
               <div className='mx-5 font-medium text-sm text-start truncate'>{props.data.message}</div>
             </div>
           </div>

@@ -190,20 +190,24 @@ const ProfileForm = () => {
           <div className="relative w-full">
             <input onKeyDown={handleInputKeyDown} onChange={(e) => {handleInputChange(e)}} value={inputValue} required
               className="peer bg-zinc-800 p-2 border border-zinc-800 focus:border-indigo-500 rounded-md outline-none w-[97%] h-10 text-white transition-all duration-200" type="text"/>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {formDatas.tags.map((tag, index) => (
-                  <span key={index} className="flex items-center gap-1 bg-indigo-600 px-2 py-1 rounded-md text-white text-sm">
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(index)}
-                      className="text-red-300 hover:text-red-500"
-                    >
-                      x
-                    </button>
-                  </span>
-                ))}
-              </div>
+              {formDatas.tags.length > 0 && 
+              <>
+                <div className="flex flex-wrap gap-2 mt-2 w-full h-20 overflow-auto">
+                  {formDatas.tags.map((tag, index) => (
+                    <span key={index} className="flex items-center gap-1 bg-zinc-800 px-2 py-1 rounded-full h-8 text-white text-sm">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(index)}
+                        className="flex justify-center items-center bg-zinc-700 rounded-full w-4 h-4"
+                      >
+                        <span>x</span>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </>
+              }
             <label className="top-0 left-4 absolute bg-zinc-800 px-1 border border-zinc-800 peer-focus:border-indigo-500 rounded-sm text-gray-400 text-md peer-focus:text-[#fff] peer-valid:text-[#fff] scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-2 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
               <span>Tags</span>
             </label>

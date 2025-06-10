@@ -28,7 +28,6 @@ module.exports.findUserbyId = async ({userId}) => {
         const user = await userModel.findOne({_id: userId});
         return user;
     } catch (error) {
-        throw error
     }
 }
 

@@ -5,7 +5,9 @@ export const DataContext = createContext();
 const DataProvider = ({children}) => {
   const [postData, setPostData] = useState([]);
   const [userData, setUserData] = useState([]);
-  const {getData} = useData(setPostData);
+  const [searchData, setSearchData] = useState([]);
+  const [homePost, setHomePost] = useState([]);
+  const {getData} = useData(setPostData,setHomePost);
   useEffect(() => {
     getData();
     getData();
@@ -13,7 +15,7 @@ const DataProvider = ({children}) => {
   
   return (
     <div>
-      <DataContext.Provider value={{postData, setPostData, userData, setUserData}}>
+      <DataContext.Provider value={{postData, setPostData, userData, setUserData,searchData, setSearchData,homePost, setHomePost}}>
         {children}
       </DataContext.Provider>
     </div>

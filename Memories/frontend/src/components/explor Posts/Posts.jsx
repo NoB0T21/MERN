@@ -55,7 +55,7 @@ setPost(prev => {
     return <p>Loading posts...</p>;
   }
   return (
-    <div className='flex justify-center md:justify-start items-start gap-8 md:mr-10 2xl:mr-40 xl:mr-15 mt-3 rounded-lg h-full w-full'>
+    <div className='flex justify-center md:justify-start items-start gap-8 mt-3 rounded-lg w-full h-full'>
       <div className="flex flex-wrap justify-center md:justify-start items-start gap-8 rounded-lg w-full h-full overflow-scroll" onScroll={handleScroll}>
         {postData.map((e) => (
           <Post key={e._id} data={e} limit={poat.length} />

@@ -23,7 +23,6 @@ module.exports.getGoogleUser = async({email}) => {
         if(!googleuser)throw new Error("Require all Fields");
         return googleuser;
     } catch (error) {
-        throw new Error(error)
     }
 }
 

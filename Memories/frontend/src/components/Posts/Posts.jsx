@@ -4,10 +4,9 @@ import { DataContext } from '../../context/DataProvider';
 import { api } from '../../utils/api';
 
 const Posts = () => {
-  const { userData } = useContext(DataContext);
+  const { userData,homePost, setHomePost } = useContext(DataContext);
   const [skip, setSkip] = useState(1);
   const [hasMore, setHasMore] = useState(true);
-  const [poat , setPost] = useState([])
 
   const fetchPosts = async () => {
     if (!hasMore) return;
@@ -28,7 +27,7 @@ const Posts = () => {
         return;
       }
       
-      setPost(prev => {
+      setHomePost(prev => {
         const merged = [...prev, ...data.data];
         const unique = Array.from(new Map(merged.map(post => [post._id, post])).values());
         return unique;
@@ -52,10 +51,10 @@ const Posts = () => {
   };
 
   return (
-    <div className='flex justify-center md:justify-start items-start gap-8 md:mr-10 2xl:mr-40 xl:mr-15 mt-3 rounded-lg h-full w-full'>
+    <div className='flex justify-center md:justify-start items-start gap-8 mt-3 rounded-lg w-full h-full'>
       <div className="flex flex-wrap justify-center md:justify-start items-start gap-8 rounded-lg w-full h-full overflow-scroll" onScroll={handleScroll}>
-        {poat.map((e) => (
-          <Post key={e._id} data={e} limit={poat.length} />
+        {homePost.map((e) => (
+          <Post key={e._id} data={e} limit={homePost.length} />
         ))}
       </div>
     </div>

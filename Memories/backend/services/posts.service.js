@@ -66,6 +66,17 @@ module.exports.updateFile = async({postId, title, message, tags}) => {
         throw error
     }
 }
+module.exports.deleteFiles = async({userId}) => {
+    if(!userId){
+        throw new Error("Require all Fields");
+    }
+    try {
+        const file =  await postModel.findOneAndDelete({_id: userId});
+        return file;
+    } catch (error) {
+        throw error
+    }
+}
 
 module.exports.getuserposts = async({userId}) => {
     try {
@@ -76,12 +87,9 @@ module.exports.getuserposts = async({userId}) => {
     }
 }
 
-module.exports.deleteFiles = async({userId}) => {
-    if(!userId){
-        throw new Error("Require all Fields");
-    }
+module.exports.getpostsBySearch = async({title,tags}) => {
     try {
-        const file =  await postModel.findOneAndDelete({_id: userId});
+        const file =  await postModel.find({$or:[{title},{tags:{$in: tags.split(',')}}]});
         return file;
     } catch (error) {
         throw error

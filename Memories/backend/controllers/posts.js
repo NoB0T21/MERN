@@ -216,3 +216,17 @@ module.exports.getuserPosts = async(req,res) => {
         return serverError(res)
     }
 };
+
+module.exports.getPostsBySearch = async(req,res) => {
+    const {searchQuery,tags} = req.query
+    try {
+        const title =new RegExp(searchQuery, 'i')
+        const Posts = await postServices.getpostsBySearch({title,tags});
+        if(!Posts){
+            return res.status(204).json({message:'Post Not Found'})
+        }
+        res.status(201).json(Posts);
+    } catch (error) {
+        return serverError(res)
+    }
+};

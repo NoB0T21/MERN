@@ -170,7 +170,7 @@ const Form = () => {
 
   return (
     <>
-      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 shadow-xl mx-10 md:mx-20 2xl:mx-55 xl:mx-25 p-3 rounded-md w-70 lg:w-120 max-w-130 h-115 xl:h-120 max-h-150'>
+      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 shadow-xl p-3 rounded-md w-65 lg:w-70 xl:w-75 max-w-130 h-2/3'>
         <h2 className='font-semibold text-2xl'>Create a Memory</h2>
         <form className="flex flex-col justify-center items-center gap-3 px-2 w-full text-white">
           <div className="relative w-full">
@@ -190,20 +190,24 @@ const Form = () => {
           <div className="relative w-full">
             <input onKeyDown={handleInputKeyDown} onChange={(e) => {handleInputChange(e)}} value={inputValue} required
               className="peer bg-zinc-800 p-2 border border-zinc-800 focus:border-indigo-500 rounded-md outline-none w-[97%] h-10 text-white transition-all duration-200" type="text"/>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {formDatas.tags.map((tag, index) => (
-                  <span key={index} className="flex items-center gap-1 bg-indigo-600 px-2 py-1 rounded-md text-white text-sm">
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() => removeTag(index)}
-                      className="text-red-300 hover:text-red-500"
-                    >
-                      x
-                    </button>
-                  </span>
-                ))}
-              </div>
+              {formDatas.tags.length > 0 && 
+              <>
+                <div className="flex flex-wrap gap-2 mt-2 w-full h-20 overflow-auto">
+                  {formDatas.tags.map((tag, index) => (
+                    <span key={index} className="flex items-center gap-1 bg-zinc-800 px-2 py-1 rounded-full h-8 text-white text-sm">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(index)}
+                        className="flex justify-center items-center bg-zinc-700 rounded-full w-4 h-4"
+                      >
+                        <span>x</span>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </>
+              }
             <label className="top-0 left-4 absolute bg-zinc-800 px-1 border border-zinc-800 peer-focus:border-indigo-500 rounded-sm text-gray-400 text-md peer-focus:text-[#fff] peer-valid:text-[#fff] scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-2 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
               <span>Tags</span>
             </label>
@@ -220,7 +224,7 @@ const Form = () => {
         </form>
         <ToastContainer/>
       </div>
-      <div className='md:hidden bottom-0 absolute flex justify-between items-center bg-zinc-600 px-5 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
+      <div className='md:hidden bottom-0 left-0 absolute flex justify-between items-center bg-zinc-600 px-5 rounded-t-sm w-screen h-14 max-h-18 overflow-hidden'>
         <Link className={`${location.pathname==='/'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/'}>{location.pathname === '/' ? <HomeFill/>:<Home/>}</Link>
         <Link className={`${location.pathname==='/explore'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/explore'}>{location.pathname === '/' ? <GlobeFill/>:<Globe/>}</Link>
         <button className='flex justify-center items-center' onClick={() => setShow(true)}>
@@ -228,8 +232,8 @@ const Form = () => {
         </button>
         <Link className={`${location.pathname==='/user/profile'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData?.picture} alt='profile' /></Link>
       </div>
-      <div className={`${show ? "top-0" : "top-500"} absolute bg-[#19191c] w-full h-full z-1 transition-(top) duration-300 ease-in-out`}>
-        <div className='flex justify-end'>
+      <div className={`${show ? "top-0" : "top-500"} absolute left-0 bottom-0 md:hidden bg-[#19191cb9] w-full h-full z-1 p-15 backdrop-blur-sm transition-(top) duration-300 ease-in-out`}>
+        <div className='flex justify-end w-full'>
           <button onClick={() => setShow(false)}>
             <Close/>
           </button>

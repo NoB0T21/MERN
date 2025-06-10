@@ -62,6 +62,10 @@ function App() {
           path="/explore"
           element={user ? <Explore /> : <Navigate to="/user" /> }
         ></Route>
+        <Route
+          path="/explore/search"
+          element={user ? <Explore /> : <Navigate to="/user" /> }
+        ></Route>
       </Route>
       <Route
         path="/user"

@@ -6,7 +6,7 @@ import useData from '../../utils/api';
 import SigninAlert from '../SigninAlert.jsx';
 
 const post = (props) => {
-  const {setPostData,userData,setUserData} = useContext(DataContext);
+  const {setPostData,userData,setUserData,setHomePost} = useContext(DataContext);
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(false);
 
@@ -24,8 +24,17 @@ const post = (props) => {
         withCredentials: true,
       }
     );
-    const {getData}=useData(setPostData,props?.limit);
-    getData();
+    if(data.status === 200) {
+      const user = await api.get(`/profile/${props.data._id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      }
+    );
+    setHomePost(user.data)
+    }
   }
 
   const follow = async () => {
@@ -86,7 +95,7 @@ const post = (props) => {
                       {tag}
                     </span>
                   ))}</div>
-              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl'>{props.data.title}</h1>
+              <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl text-start truncate'>{props.data.title}</h1>
               <div className='mx-5 font-medium text-sm text-start truncate'>{props.data.message}</div>
             </div>
         </div>
