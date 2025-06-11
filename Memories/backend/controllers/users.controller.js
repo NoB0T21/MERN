@@ -19,24 +19,22 @@ function notFound(res,code){
 };
 
 module.exports.createusers = async (req,res) => {
-    const {firstName,lastName,email,picture,password}=req.body
-    if(!firstName||!lastName||!email||!password){
+    const {name,email,picture,password}=req.body
+    if(!name||!email||!password){
         notFound(res,400)
     }
     try{
-        const existinguser = await googleUserServices.getGoogleUser({email})
-        try{
+            const existingusers = await googleUserServices.getGoogleUser({email})
             const existinguser1 = await userServices.findUser({email})
-            if(existinguser !== null || (Array.isArray(existinguser1) && existinguser1.length > 0)){
+            if(existingusers === 'null' && existinguser1 === 'null' ){
                 return res.status(200).json({
                     message: "User already exists",
                     success:true
                 });
             }
         }catch(error){return res.status(401).json({ error: 'No access token provided' });}
-    }catch{}
     const hashpassword = await userModel.hashpassword(password)
-    const user  = await userServices.createUser({firstName,lastName,email,picture,password: hashpassword})
+    const user  = await userServices.createUser({name,email,picture,password: hashpassword})
     if(!user){
         return serverError(res,500)
     }
@@ -157,10 +155,10 @@ module.exports.verifyUser = async (req,res) => {
         }
         const user = await userServices.findUser({email: decoded.email})
         if(!user)return res.status(500).json({
-                message: "Server Error",
-                success:true
-            });
-        resstatus(200).json(user)
+            message: "Server Error",
+            success:true
+        });
+        return res.status(200).json(user)
     } catch (error) {
         return res.status(500).json({ error: 'Token not found' });
     }
@@ -219,3 +217,18 @@ module.exports.follow = async (req, res) => {
         return serverError(res,500);
     };
 };
+
+module.exports.follower = async (req,res) => {
+    const id = req.body
+    try {
+        const following = await userServices.findUserbyIds({id});
+        const googlefollowing = await googleServices.findUserbyIds({id});
+        const combined = [...following, ...googlefollowing];
+        const sorted = combined.sort((a, b) =>
+            a.name.split(' ')[0].localeCompare(b.name.split(' ')[0])
+        );
+        res.status(200).json(sorted)
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
+    }
+}

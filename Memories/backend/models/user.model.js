@@ -3,11 +3,7 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
 const formSchema = mongoose.Schema({
-    firstName:{
-        required: true,
-        type: String
-    },
-    lastName:{
+    name:{
         required: true,
         type: String
     },
@@ -20,7 +16,6 @@ const formSchema = mongoose.Schema({
         type: String
     },
     picture: {
-        required: true,
         type: String
     },
     followers: [{
@@ -37,8 +32,7 @@ formSchema.methods.generateToken=  function(){
     const token = jwt.sign({
         _id: this._id,
         email: this.email,
-        firstName: this.firstName,
-        lastName: this.lastName,
+        name: this.name,
         picture: this.picture
     },process.env.JWT_SECRET,{expiresIn: '1d',})
     return token

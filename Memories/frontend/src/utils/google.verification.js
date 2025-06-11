@@ -34,6 +34,7 @@ export const verifyToken = async (token) => {
         const responsre = await axios.get(`${import.meta.env.VITE_BASE_URL}/user/verify`, {
             withCredentials: true
           });
+          console.log(responsre)
         return responsre.data;
     } catch (error) {
         return null

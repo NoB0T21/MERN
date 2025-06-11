@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import {DataContext} from '../../context/DataProvider'
 import { api } from "../../utils/api"
+import { Link } from "react-router-dom"
 
 const UserProfile = () => {
     const {userData,postData} = useContext(DataContext)
@@ -27,18 +28,18 @@ const UserProfile = () => {
     <div className="w-full h-full">
         <div className="flex justify-between xl:justify-start items-center gap-5 xl:gap-20 px-3 w-full h-full">
             <img className="rounded-full w-18 md:w-25 h-18 md:h-25" src={userData.picture} />
-            <div className="flex flex-col items-start text-md md:text-xl">
+            <div to={'/user/profile'} className="flex flex-col items-start text-md md:text-xl">
                 <h3 className="font-bold">{posts.length}</h3>
                 <p className="font-semibold">posts</p>
             </div>
-            <div className="flex flex-col items-start text-md md:text-xl">
+            <Link to={'/user/followers'} className="flex flex-col items-start text-md md:text-xl">
                 <h3 className="font-bold">{userData.followers.length}</h3>
                 <p className="font-semibold">followers</p>
-            </div>
-            <div className="flex flex-col items-start text-md md:text-xl">
+            </Link>
+            <Link to={'/user/following'} className="flex flex-col items-start text-md md:text-xl">
                 <h3 className="font-bold">{userData.following.length}</h3>
                 <p className="font-semibold">following</p>
-            </div>
+            </Link>
         </div>
     </div>
   )

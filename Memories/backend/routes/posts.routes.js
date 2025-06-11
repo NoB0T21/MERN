@@ -14,6 +14,7 @@ router.post('/delete/:id',googleAuthMiddleware,postController.deleteFile);
 router.get('/home',postController.showFile)
 router.get('/profile/:id',googleAuthMiddleware,postController.getuserPosts)
 router.get('/post/:id',googleAuthMiddleware,postController.getPostByid)
+router.get('/postByid/:id',googleAuthMiddleware,postController.getPostById)
 router.get('/explore/search',postController.getPostsBySearch)
 
 module.exports = router;

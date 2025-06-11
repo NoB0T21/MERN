@@ -1,10 +1,12 @@
 import {useGoogleLogin} from '@react-oauth/google';
 import { api } from '../../utils/api';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import {DataContext} from '../../context/DataProvider'
 
 const GoogleForm = () => {
     const navigate = useNavigate();
+    const{setSigninMethod}=useContext(DataContext)
     const [progress, setProgress] = useState(0);
     const registerUser = async (userData) => {
         setProgress(40)
@@ -40,6 +42,7 @@ const GoogleForm = () => {
                     setProgress(30)
                     localStorage.setItem('token',res.access_token);
                     registerUser(userData.data);
+                    setSigninMethod(true)
                     await setTimeout(() => {
                         setProgress(100)
                         navigate('/', { replace: true });

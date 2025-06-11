@@ -61,7 +61,7 @@ const SearchForm = () => {
             <input onChange={(e) => {setFormData({...formDatas, title: e.target.value})}} value={formDatas.title}
               className="peer bg-zinc-800 p-2 border border-zinc-800 focus:border-indigo-500 rounded-md outline-none w-[97%] h-10 text-white transition-all duration-200" type="text"/>
             <label className="left-4 absolute bg-zinc-800 px-1 border border-zinc-800 peer-focus:border-indigo-500 rounded-sm text-gray-400 text-md peer-focus:text-[#fff] peer-valid:text-[#fff] scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-2 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-              <span>Title</span>
+              <span>Search</span>
             </label>
           </div>
           <div className="relative w-full">

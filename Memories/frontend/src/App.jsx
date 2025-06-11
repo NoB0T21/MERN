@@ -11,25 +11,34 @@ import './App.css';
 import { DataContext } from './context/DataProvider';
 import Profile from './components/pages/Profile';
 import Explore from './components/pages/Explore';
+import ViewPost from './components/pages/ViewPost';
+import Follower from './components/pages/Follower';
+import Following from './components/pages/Following';
 
 function App() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const {setUserData} = useContext(DataContext);
+  const {setUserData,signinMethod} = useContext(DataContext);
 
   useEffect(() => {
     const checkUser = async () => {
+      const method = signinMethod
       const token = localStorage.getItem("token");
       if (token) {
-        let userInfo = await verifyToken(token)
-        if(!userInfo?.email){
+        let userInfo 
+        if(method=== true){
+          console.log('heiii')
           userInfo = await verifyGoogleToken(token);
           setUser(userInfo);
           setUserData(userInfo)
         }
-        setUser(userInfo);
-        setUserData(userInfo)
+        if(method=== false){
+          console.log('yoo')
+          userInfo = await verifyToken(token)
+          setUser(userInfo);
+          setUserData(userInfo)
+        }
       } else {
         setUser(null);
       }
@@ -61,30 +70,41 @@ function App() {
         <Route
           path="/explore"
           element={user ? <Explore /> : <Navigate to="/user" /> }
-        ></Route>
+        />
         <Route
           path="/explore/search"
           element={user ? <Explore /> : <Navigate to="/user" /> }
-        ></Route>
+        />
+        <Route
+          path='/user/Profile'
+          element={user ? <Profile/> : <Navigate to='/user'/>}
+        >
+          <Route
+            path='/user/Profile'
+            element= {<UserPosts/>}
+          />
+          <Route
+            path='/user/Profile/future'
+            element= {<Form/>}
+          />
+        </Route>
       </Route>
+      <Route
+        path="/user/followers"
+        element={user ? <Follower /> : <Navigate to="/user" /> }
+      />
+      <Route
+        path="/user/following"
+        element={user ? <Following /> : <Navigate to="/user" /> }
+      />
       <Route
         path="/user"
         element={user ? <Navigate to="/" /> : <Unauth />}
       />
-      <Route
-        path='/user/Profile'
-        element={user ? <Profile/> : <Navigate to='/user'/>}
-      >
-        <Route
-          path='/user/Profile'
-          element= {<UserPosts/>}
-        />
-        <Route
-          path='/user/Profile/future'
-          element= {<Form/>}
-        />
-      </Route>
-      
+      < Route
+        path='/post/:_id'
+        element={<ViewPost/>}
+      />
     </Routes>
   );
 }

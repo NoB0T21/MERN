@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react';
 import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { Delete, Like, LikeFill, Menu, Close, EditIcon } from '../Icons/Icons.jsx';
 import SigninAlert from '../SigninAlert.jsx';
 import useData from '../../utils/api';
 
 const posts = (props) => {
+  const navigate = useNavigate();
     const {setPostData,userData} = useContext(DataContext);
     const [progress, setProgress] = useState(0);
     const [show, setShow] = useState(false);
@@ -60,9 +61,9 @@ const posts = (props) => {
               />
           </div>
         </div>
-        <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
+        <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-72 md:w-80 max-w-90 h-auto overflow-clip'>
           <div className='flex flex-col'>
-              <img className='static bg-black opacity-70 rounded-md h-40 object-cover' src={props.data.ImageUrl} />
+              <img onClick={()=>{navigate(`${'/post/'+props.data._id}`, { replace: true });}} className='static bg-black opacity-70 rounded-md h-40 object-cover' src={props.data.ImageUrl} />
             <div className='top-2 left-5 absolute flex justify-between pr-2 w-full text-white'>
               <div className='flex flex-col justify-center items-start'>
                   <div className='font-bold text-gray-200'>{props.data.creator}</div>

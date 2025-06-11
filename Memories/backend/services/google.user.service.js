@@ -63,3 +63,12 @@ module.exports.findUserbyId2 = async({id}) => {
         throw new Error(error)
     }
 }
+
+module.exports.findUserbyIds = async ({id}) => {
+    try {
+        const user = await userModel.find({_id: {$in: id}});
+        return user;
+    } catch (error) {
+        throw error
+    }
+}

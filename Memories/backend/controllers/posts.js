@@ -191,10 +191,11 @@ module.exports.showFile = async (req, res) => {
     const skip = Number(req.query.skip) || 0 ;
     const limit =  Number(req.query.limit) || 4;
     try {
-        const userPosts = await postServices.getFile({ skip, limit });
-        if (!userPosts || userPosts.length === 0) {
+        const userPostss = await postServices.getFile({ skip, limit });
+        if (!userPostss || userPostss.length === 0) {
             return res.status(204).json({message: 'Post not Found'})
         }
+        const userPosts = [...userPostss].sort(() => Math.random() - 0.5);
         return res.status(200).json(userPosts); // ✅ Use 200 OK
     } catch (error) {
         return serverError(res)
@@ -217,11 +218,44 @@ module.exports.getuserPosts = async(req,res) => {
     }
 };
 
+module.exports.getPostByid = async(req,res) => {
+    const userId = req.params.id;
+    if (!userId) {
+        return notFound(res);
+    }
+    try {
+        const userPost = await postServices.getuserposts({userId});
+        if(!userPost){
+            return res.status(204).json({message:'Post Not Found'})
+        }
+        res.status(201).json(userPost);
+    } catch (error) {
+        return serverError(res)
+    }
+};
+
+module.exports.getPostById = async(req,res) => {
+    const userId = req.params.id;
+    if (!userId) {
+        return notFound(res);
+    }
+    try {
+        const userPost = await postServices.getpostsById({userId});
+        if(!userPost){
+            return res.status(204).json({message:'Post Not Found'})
+        }
+        res.status(201).json(userPost);
+    } catch (error) {
+        return serverError(res)
+    }
+};
+
 module.exports.getPostsBySearch = async(req,res) => {
     const {searchQuery,tags} = req.query
     try {
-        const title =new RegExp(searchQuery, 'i')
+        const title = new RegExp(searchQuery, 'i')
         const Posts = await postServices.getpostsBySearch({title,tags});
+        console.log(Posts)
         if(!Posts){
             return res.status(204).json({message:'Post Not Found'})
         }

@@ -230,7 +230,7 @@ const Form = () => {
         <button className='flex justify-center items-center' onClick={() => setShow(true)}>
           <Upload2/>
         </button>
-        <Link className={`${location.pathname==='/user/profile'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData?.picture} alt='profile' /></Link>
+        <Link className={`${location.pathname==='/user/profile'||location.pathname==='/user/profile/future'? 'bg-zinc-800 animate-bounce ':'bg-transparent'} flex justify-center items-center  w-13 h-13 rounded-full transition-(bg,mb) duration-200 ease-in-out`} to={'/user/profile'}><img className='rounded-full w-9 h-9' src={userData?.picture} alt='profile' /></Link>
       </div>
       <div className={`${show ? "top-0" : "top-500"} absolute left-0 bottom-0 md:hidden bg-[#19191cb9] w-full h-full z-1 p-15 backdrop-blur-sm transition-(top) duration-300 ease-in-out`}>
         <div className='flex justify-end w-full'>

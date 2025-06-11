@@ -13,5 +13,7 @@ router.get('/token',googleAuthMiddleware,userController.tokenUser)
 router.get('/verify',googleAuthMiddleware,userController.verifyUser)
 router.get('/logout',googleAuthMiddleware,userController.logoutUser)
 router.get('/follow/:id',googleAuthMiddleware,userController.follow)
+router.post('/follower',googleAuthMiddleware,userController.follower)
+router.post('/following',googleAuthMiddleware,userController.follower)
 
 module.exports = router

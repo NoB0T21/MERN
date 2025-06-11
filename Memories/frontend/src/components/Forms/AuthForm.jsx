@@ -1,14 +1,16 @@
-import {useState } from 'react'
+import {useContext, useState } from 'react'
 import {GoogleOAuthProvider} from '@react-oauth/google'
 import { PulseLoader } from "react-spinners";
 import { api } from '../../utils/api';
 import { HidePass, ShowPass } from '../Icons/Icons';
 import { useNavigate } from 'react-router-dom';
 import GoogleForm from './GoogleForm';
+import {DataContext} from '../../context/DataProvider'
 
 
 const AuthForm = () => {
     const navigate = useNavigate();
+    const{setSigninMethod}=useContext(DataContext)
     const googleID = `${import.meta.env.VITE_GOOGLE_ID}`
     const [isSignin, setIsSignin] = useState(false);
     const [isLoding, setIsLoding] = useState(false);
@@ -17,8 +19,7 @@ const AuthForm = () => {
     const [form, setForm] = useState(false);
     const [errormsg, setError] = useState({})
     const [formData, setFormData] = useState({
-        firstName: '',
-        lastName: '',
+        name: '',
         email: '',
         picture:'',
         password: '',
@@ -34,14 +35,11 @@ const AuthForm = () => {
         setPass(password === confirm ? 'true' : 'false')
     }
     
-    const validation = ({first,last,ema,pas}) => {
+    const validation = ({first,ema,pas}) => {
         const newErrors = {};
         if (!isSignin) {
             if (!first || first.length < 3) {
-                newErrors.firstName = 'First name must be at least 3 characters';}
-            if (!last || last.length < 3) {
-                newErrors.lastName = 'Last name must be at least 3 characters';
-            }
+                newErrors.name = 'First name must be at least 3 characters';}
         }
         if (!ema|| ema.length < 3) {newErrors.email = 'Email is required';setForm(false)}
         if (!pas || pas.length < 3) {
@@ -61,6 +59,7 @@ const AuthForm = () => {
             const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData,{withCredentials: true})
             const responsre = await api.get(`${import.meta.env.VITE_BASE_URL}/user/token`,{withCredentials: true});
             localStorage.setItem('token',responsre.data.token)
+            setSigninMethod(false)
             await setTimeout(() => {
                         navigate('/', { replace: true });
                     },2000);
@@ -76,27 +75,18 @@ const AuthForm = () => {
         { !isSignin &&
             <div className='flex justify-between gap-3'>
                 <div className="relative w-full">
-                    {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.firstName}</p>}
-                    <input type="text" value={formData.firstName} onChange={(e) => {setFormData({...formData, firstName: e.target.value});validation({first: e.target.value,last: formData.lastName,ema:formData.email,pas:formData.password})}} error={errormsg.firstName} required autoComplete="off"
+                    {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.name}</p>}
+                    <input type="text" value={formData.name} onChange={(e) => {setFormData({...formData, name: e.target.value});validation({first: e.target.value,ema:formData.email,pas:formData.password})}} error={errormsg.firstName} required 
                         className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                         />
                     <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs text-clip scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-                    <span>FirstName</span>
-                    </label>
-                </div>
-                <div className="relative w-full">
-                    {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.lastName}</p>}
-                    <input type="text" value={formData.lastName} onChange={(e) => {setFormData({...formData, lastName: e.target.value});validation({first:formData.firstName,last: e.target.value,ema:formData.email,pas:formData.password})}} required autoComplete="off"
-                        className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
-                    />
-                    <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
-                    <span>Last name</span>
+                    <span>Name</span>
                     </label>
                 </div>
             </div>}
             <div className="relative w-full">
                 {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.email}</p>}
-                <input type='email' value={formData.email} onChange={(e) => {setFormData({...formData, email: e.target.value}); setFormData1({...formData1, email: e.target.value });validation({first:formData.firstName,last:formData.lastName,ema: e.target.value,pas:formData.password})}} required autoComplete="off"
+                <input type='email' value={formData.email} onChange={(e) => {setFormData({...formData, email: e.target.value}); setFormData1({...formData1, email: e.target.value });validation({first:formData.name,ema: e.target.value,pas:formData.password})}} required 
                     className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                 />
                 <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
@@ -113,7 +103,7 @@ const AuthForm = () => {
             </div>
             <div className="relative w-full">
                 {errormsg && <p className="mb-1 text-red-500 text-xs">{errormsg.password}</p>}
-                <input type={show ? "text" : "password"} value={formData.password} onChange={(e) => {handlePassword(formData.confirm,e.target.value);setFormData({...formData, password: e.target.value});setFormData1({...formData1, password: e.target.value });validation({first:formData.firstName,last:formData.lastName,ema:formData.email,pas: e.target.value})}} required autoComplete="off"
+                <input type={show ? "text" : "password"} value={formData.password} onChange={(e) => {handlePassword(formData.confirm,e.target.value);setFormData({...formData, password: e.target.value});setFormData1({...formData1, password: e.target.value });validation({first:formData.name,ema:formData.email,pas: e.target.value})}} required autoComplete="off"
                     className="peer bg-zinc-800 p-2 border border-zinc-700 focus:border-indigo-500 rounded-md outline-none w-full h-10 text-white transition-all duration-200"
                 />
                 <label className="left-2 absolute bg-[#212121] px-1 rounded-sm text-gray-400 peer-focus:text-[#2196f3] peer-valid:text-[#2196f3] text-xs scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-3 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">

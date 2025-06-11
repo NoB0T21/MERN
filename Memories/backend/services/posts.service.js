@@ -87,8 +87,18 @@ module.exports.getuserposts = async({userId}) => {
     }
 }
 
+module.exports.getpostsById = async({userId}) => {
+    try {
+        const file =  await postModel.find({_id: userId});
+        return file;
+    } catch (error) {
+        throw error
+    }
+}
+
 module.exports.getpostsBySearch = async({title,tags}) => {
     try {
+        console.log(title)
         const file =  await postModel.find({$or:[{title},{tags:{$in: tags.split(',')}}]});
         return file;
     } catch (error) {
