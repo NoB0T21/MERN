@@ -7,6 +7,7 @@ const DataProvider = ({children}) => {
   const [userData, setUserData] = useState([]);
   const [searchData, setSearchData] = useState([]);
   const [homePost, setHomePost] = useState([]);
+  const [searchProfile, setSearchProfile] = useState([]);
   const [signinMethod, setSigninMethod] = useState(true);
   const {getData} = useData(setPostData,setHomePost);
   useEffect(() => {
@@ -16,7 +17,7 @@ const DataProvider = ({children}) => {
   
   return (
     <div>
-      <DataContext.Provider value={{postData, setPostData, userData, setUserData,searchData, setSearchData,homePost, setHomePost,signinMethod, setSigninMethod}}>
+      <DataContext.Provider value={{postData, setPostData, userData, setUserData,searchData, setSearchData,homePost, setHomePost,signinMethod, setSigninMethod,searchProfile, setSearchProfile}}>
         {children}
       </DataContext.Provider>
     </div>

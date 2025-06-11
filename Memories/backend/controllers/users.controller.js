@@ -227,7 +227,7 @@ module.exports.follower = async (req,res) => {
         const sorted = combined.sort((a, b) =>
             a.name.split(' ')[0].localeCompare(b.name.split(' ')[0])
         );
-        res.status(200).json(sorted)
+        return res.status(200).json(sorted)
     } catch (error) {
         res.status(500).json({ error: 'Server error' });
     }

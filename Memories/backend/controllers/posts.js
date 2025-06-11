@@ -3,6 +3,8 @@ const postServices = require('../services/posts.service');
 const multer = require('multer');
 const uuid = require('uuid-v4');
 const upload =  multer({ storage: multer.memoryStorage() });
+const googleServices = require('../services/google.user.service')
+const userServices = require('../services/user.service');
 
 function serverError(res){
     return res.status(500).json({
@@ -255,11 +257,17 @@ module.exports.getPostsBySearch = async(req,res) => {
     try {
         const title = new RegExp(searchQuery, 'i')
         const Posts = await postServices.getpostsBySearch({title,tags});
-        console.log(Posts)
+        const following = await userServices.findUserbyName({title});
+        const googlefollowing = await googleServices.findUserbyName({title});
+        const combined = [...following, ...googlefollowing];
+        const profile = combined.sort((a, b) =>
+            a.name.split(' ')[0].localeCompare(b.name.split(' ')[0])
+        );
+        console.log(profile)
         if(!Posts){
             return res.status(204).json({message:'Post Not Found'})
         }
-        res.status(201).json(Posts);
+        res.status(201).json({Posts,profile});
     } catch (error) {
         return serverError(res)
     }

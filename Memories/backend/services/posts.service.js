@@ -98,8 +98,20 @@ module.exports.getpostsById = async({userId}) => {
 
 module.exports.getpostsBySearch = async({title,tags}) => {
     try {
-        console.log(title)
-        const file =  await postModel.find({$or:[{title},{tags:{$in: tags.split(',')}}]});
+        const query = [];
+
+if (title) {
+  query.push({ title });
+}
+
+if (tags) {
+    const tagList = tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+    if (tagList.length > 0) {
+            query.push({ tags: { $in: tagList } });
+        }
+    }
+
+        const file = await postModel.find(query.length > 0 ? { $or: query } : {});
         return file;
     } catch (error) {
         throw error

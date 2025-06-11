@@ -72,3 +72,12 @@ module.exports.findUserbyIds = async ({id}) => {
         throw error
     }
 }
+
+module.exports.findUserbyName = async ({title}) => {
+    try {
+        const user = await userModel.find({name: title});
+        return user;
+    } catch (error) {
+        throw error
+    }
+}
