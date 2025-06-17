@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from 'react';
 import Post from './post';
 import { DataContext } from '../../context/DataProvider';
 import { api } from '../../utils/api';
+import PostSkeleton from '../PostSkeleton';
+import {SyncLoader} from 'react-spinners'
 
 const Posts = () => {
   const { postData, setPostData } = useContext(DataContext);
@@ -52,7 +54,7 @@ setPost(prev => {
   };
 
   if (postData.length === 0 && loading) {
-    return <p>Loading posts...</p>;
+    return <PostSkeleton/>;
   }
   return (
     <div className='flex justify-center md:justify-start items-start gap-8 mt-3 rounded-lg w-full h-full'>
@@ -60,7 +62,7 @@ setPost(prev => {
         {postData.map((e) => (
           <Post key={e._id} data={e} limit={poat.length} />
         ))}
-        {loading && <p>Loading more...</p>}
+        {loading && <SyncLoader color='#fff'/>}
       </div>
     </div>
   );

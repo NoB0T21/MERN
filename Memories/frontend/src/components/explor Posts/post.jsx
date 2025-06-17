@@ -65,7 +65,7 @@ const post = (props) => {
             />
         </div>
       </div>
-      <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
+      <div className='relative flex flex-col justify-start bg-[rgba(84,84,84,0.6)] md:bg-[rgba(84,84,84,0.4)] backdrop-blur-5xl rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
         <div className='flex flex-col'>
           <img onClick={()=>{navigate(`${'/post/'+props.data._id}`, { replace: true });}} className='static bg-black opacity-70 rounded-md h-65 object-cover' src={props.data.ImageUrl} />
         <div className='top-2 left-5 absolute flex flex-col justify-center items-start text-white'>

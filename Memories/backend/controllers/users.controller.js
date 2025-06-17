@@ -39,8 +39,14 @@ module.exports.createusers = async (req,res) => {
         return serverError(res,500)
     }
     const token = user.generateToken();
-    res.cookie('token',token);
-    return res.status(201).json({
+    
+    res.cookie('token',token,{
+        httpOnly: true,
+        secure: true,
+        sameSite: 'Strict',
+        maxAge: 24 * 60 * 60 * 1000
+    });
+    return res.status(200).json({
         message: "User created",
         success:true
     });
@@ -134,6 +140,7 @@ module.exports.loginusers = async (req,res) => {
 module.exports.tokenUser = async (req,res) => {
     try {
         const token = req.cookies.token;
+        console.log(token)
         if (!token) {
             return res.status(500).json({ error: 'Token not found' });
         }

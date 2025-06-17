@@ -4,7 +4,6 @@ import { useContext, useEffect, useState } from 'react';
 import Edit from './components/pages/Edit';
 import Home from './components/pages/Home';
 import Posts from './components/Posts/Posts';
-import Form from './components/Forms/Form';
 import Unauth from './components/Unauth';
 import UserPosts from './components/user Posts/PostsGrid';
 import './App.css';
@@ -27,18 +26,12 @@ function App() {
       const token = localStorage.getItem("token");
       if (token) {
         let userInfo 
-        if(method=== true){
-          console.log('heiii')
-          userInfo = await verifyGoogleToken(token);
-          setUser(userInfo);
-          setUserData(userInfo)
-        }
-        if(method=== false){
-          console.log('yoo')
+        userInfo = await verifyGoogleToken(token);
+        if(!userInfo){
           userInfo = await verifyToken(token)
-          setUser(userInfo);
-          setUserData(userInfo)
         }
+        setUser(userInfo);
+        setUserData(userInfo)
       } else {
         setUser(null);
       }
@@ -46,7 +39,6 @@ function App() {
     };
     checkUser();
   }, [location.pathname]);
-
   if (loading) return <div>Loading...</div>;
 
   return (
@@ -85,7 +77,7 @@ function App() {
           />
           <Route
             path='/user/Profile/future'
-            element= {<Form/>}
+            element= {<div>comming soon...</div>}
           />
         </Route>
       </Route>

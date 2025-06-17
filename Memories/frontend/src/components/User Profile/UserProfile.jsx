@@ -22,10 +22,10 @@ const UserProfile = () => {
         setPosts(data.data)
       }
       fun()
-    },[location.pathname,postData])
+    },[location.pathname])
 
   return (
-    <div className="w-full h-full">
+    <div className="bg-[rgba(84,84,84,0.4)] backdrop-blur-5xl rounded-2xl w-full h-full">
         <div className="flex justify-between xl:justify-start items-center gap-5 xl:gap-20 px-3 w-full h-full">
             <img className="rounded-full w-18 md:w-25 h-18 md:h-25" src={userData.picture} />
             <div to={'/user/profile'} className="flex flex-col items-start text-md md:text-xl">

@@ -1,16 +1,14 @@
-import {useContext, useState } from 'react'
+import {useState } from 'react'
 import {GoogleOAuthProvider} from '@react-oauth/google'
 import { PulseLoader } from "react-spinners";
 import { api } from '../../utils/api';
 import { HidePass, ShowPass } from '../Icons/Icons';
 import { useNavigate } from 'react-router-dom';
 import GoogleForm from './GoogleForm';
-import {DataContext} from '../../context/DataProvider'
 
 
 const AuthForm = () => {
     const navigate = useNavigate();
-    const{setSigninMethod}=useContext(DataContext)
     const googleID = `${import.meta.env.VITE_GOOGLE_ID}`
     const [isSignin, setIsSignin] = useState(false);
     const [isLoding, setIsLoding] = useState(false);
@@ -55,15 +53,17 @@ const AuthForm = () => {
         e.preventDefault();
         setIsLoding(true);
          try {
+             const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData,{withCredentials: true})
+             if(user.data.success === false){
+                return null
+             }
+             const responsre = await api.get(`${import.meta.env.VITE_BASE_URL}/user/token`,{withCredentials: true});
+                localStorage.setItem('token',responsre.data.token)
+                await setTimeout(() => {
+                    navigate('/', { replace: true });
+                },2000);
+            } catch (error) {
             setIsLoding(false);
-            const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData,{withCredentials: true})
-            const responsre = await api.get(`${import.meta.env.VITE_BASE_URL}/user/token`,{withCredentials: true});
-            localStorage.setItem('token',responsre.data.token)
-            setSigninMethod(false)
-            await setTimeout(() => {
-                        navigate('/', { replace: true });
-                    },2000);
-        } catch (error) {
                 
         }
     }
@@ -71,7 +71,7 @@ const AuthForm = () => {
   return (
     <div className='flex flex-col justify-center gap-2 bg-zinc-700 rounded-md w-100 lg:w-120'>
         <h1 className='my-4 font-semibold text-3xl'>{isSignin ? 'Sign In' : 'Sign Up'}</h1>
-        <form className='flex flex-col gap-3 mx-3 w-[94]'onSubmit={handleSubmit} noValidate>
+        <form className='flex flex-col gap-3 mx-3 w-[95%]' onSubmit={handleSubmit} noValidate>
         { !isSignin &&
             <div className='flex justify-between gap-3'>
                 <div className="relative w-full">

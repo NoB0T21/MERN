@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
 import {Link, useNavigate} from 'react-router-dom';
-import { Delete, Like, LikeFill, Menu, Close, EditIcon } from '../Icons/Icons.jsx';
+import { Delete, Like, LikeFill, Menu, Close, EditIcon, Download } from '../Icons/Icons.jsx';
 import SigninAlert from '../SigninAlert.jsx';
 import useData from '../../utils/api';
 
@@ -12,7 +12,10 @@ const posts = (props) => {
     const [progress, setProgress] = useState(0);
     const [show, setShow] = useState(false);
     const [showPost, setShowPost] = useState(false)
-  
+    const [like, setLike ] = useState([])
+    useEffect(()=> {
+    setLike(props.data.likecount)
+  },[])
     const deletePost = async (id) => {
       setProgress(10)
       setProgress(54)
@@ -34,7 +37,7 @@ const posts = (props) => {
       setProgress(100)
     };
   
-    const likePost = async () => {
+    const likePost = async (id) => {
       const token = localStorage.getItem('token');
       if(!token){
         setShow(true)
@@ -48,9 +51,63 @@ const posts = (props) => {
           withCredentials: true,
         }
       );
-      const {getData}=useData(setPostData,props?.limit);
-      getData();
+      if(data.status === 200) {
+      const userId = userData?._id || userData?.id;
+      const currentLikes = Array.isArray(like) ? like : [];
+
+      const index = currentLikes.indexOf(userId);
+      let updatedLikes;
+
+      if (index === -1) {
+        updatedLikes = [...currentLikes, userId]; // Add like
+      } else {
+        updatedLikes = currentLikes.filter(id => id !== userId); // Remove like
+      }
+      setLike(updatedLikes);
     }
+    }
+
+    const downloadPost = async (id) => {
+  setProgress(10);
+  setProgress(54);
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await api.get(`${import.meta.env.VITE_BASE_URL}/download/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+      responseType: 'blob', // Ensure we get a blob for file download
+    });
+
+    // Extract filename from Content-Disposition header
+    let fileName = 'downloaded-file';
+    const contentDisposition = response.headers['content-disposition'];
+    if (contentDisposition) {
+      const match = contentDisposition.match(/filename="?([^"]+)"?/);
+      if (match && match[1]) fileName = match[1];
+    }
+
+    // Create a download link and click it
+    const url = window.URL.createObjectURL(response.data);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setProgress(76);
+    setProgress(100);
+    window.URL.revokeObjectURL(url);
+    setProgress(0);
+  } catch (err) {
+    console.error("Download failed:", err);
+    setProgress(0);
+  }
+};
+
     return (
       <>
         <div className="top-0 absolute w-full">
@@ -61,7 +118,7 @@ const posts = (props) => {
               />
           </div>
         </div>
-        <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-72 md:w-80 max-w-90 h-auto overflow-clip'>
+        <div className='relative flex flex-col justify-start bg-[rgba(84,84,84,0.6)] md:bg-[rgba(84,84,84,0.6)] backdrop-blur-5xl rounded-md w-72 md:w-80 max-w-90 h-auto overflow-clip'>
           <div className='flex flex-col'>
               <img onClick={()=>{navigate(`${'/post/'+props.data._id}`, { replace: true });}} className='static bg-black opacity-70 rounded-md h-40 object-cover' src={props.data.ImageUrl} />
             <div className='top-2 left-5 absolute flex justify-between pr-2 w-full text-white'>
@@ -77,6 +134,10 @@ const posts = (props) => {
                   <Link to={'/edit/'+props.data._id} className='flex justify-between items-center hover:bg-zinc-700 px-2 rounded-md w-full h-8'><EditIcon/>Edit
                   </Link>
                   <div className='border-zinc-600 border-b-2'></div>
+                  <button onClick={() => {downloadPost(props.data._id)}} className='flex justify-between items-center hover:bg-zinc-700 px-2 rounded-md w-full h-8 text-white'>
+                      <Download/> Download
+                  </button>
+                  <div className='border-zinc-600 border-b-2'></div>
                   <button onClick={() => {deletePost(props.data._id)}} className='flex justify-between items-center hover:bg-zinc-700 px-2 rounded-md w-full h-8 text-red-500'>
                       <Delete/> Delete
                   </button>
@@ -88,13 +149,13 @@ const posts = (props) => {
                     </span>
                   ))}</div>
               <h1 className='static flex justify-between mx-5 px-2 py-2 font-semibold text-2xl text-start truncate'>{props.data.title}</h1>
-              <div className='mx-5 font-medium text-sm text-start truncate'>{props.data.message}</div>
+              <div className='mx-5 h-15 font-medium text-sm text-start truncate'>{props.data.message}</div>
             </div>
           </div>
           <div className='static flex justify-between px-2 py-3'>
             <button onClick={() =>likePost()} className="flex items-center gap-1">
-              {props.data.likecount?.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
-              <span>{props.data.likecount?.length}</span>
+              {like?.includes(userData.id||userData._id) ? < LikeFill/> : < Like/>}
+              <span>{like?.length}</span>
             </button>
           </div>
         </div>

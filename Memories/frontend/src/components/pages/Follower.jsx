@@ -16,14 +16,13 @@ const Follower = () => {
                     },
                     withCredentials: true,
                 })
-                console.log(data.data)
                 setFollower(data.data)
             }
             followe()
     },[])
   return (
     <div className='flex justify-center w-full h-[100vh]'>
-      <div className='my-5 mx-10 p-5 flex flex-col gap-20 justify-start items-center bg-zinc-800 rounded-md w-full h-[90%] md:w-1/2 lg:w-200 overflow-y-scroll'>
+      <div className='flex flex-col justify-start items-center gap-8 bg-linear-to-tl from-[rgba(165,54,225,0.4)] to-[rgba(88,40,185,0.4)] shadow-xl backdrop-blur-5xl mx-10 my-5 p-5 rounded-md w-full md:w-1/2 lg:w-200 h-[90%] overflow-y-scroll'>
         {follower.map((profile)=>(<UserProfile key={profile._id} data={profile}/>))}
       </div>
     </div>

@@ -2,13 +2,16 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import Post from './post';
 import { DataContext } from '../../context/DataProvider';
 import { api } from '../../utils/api';
+import PostSkeleton from '../PostSkeleton';
 
 const Posts = () => {
   const { userData,homePost, setHomePost } = useContext(DataContext);
   const [skip, setSkip] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [hasMore, setHasMore] = useState(true);
 
   const fetchPosts = async () => {
+    setLoading(true)
     if (!hasMore) return;
     try {
       const token = localStorage.getItem('token');
@@ -24,6 +27,7 @@ const Posts = () => {
       );
       if (!data.data || data.data.length === 0) {
         setHasMore(false);
+        setLoading(false)
         return;
       }
       
@@ -32,10 +36,10 @@ const Posts = () => {
         const unique = Array.from(new Map(merged.map(post => [post._id, post])).values());
         return unique;
       });
-
+      setLoading(false)
     } catch (err) {
       console.error(err.message);
-    } finally {
+      setLoading(true)
     }
   };
 
@@ -49,7 +53,7 @@ const Posts = () => {
     setSkip(prev => prev + 1);
   }
   };
-
+  if (loading) return <PostSkeleton/>;
   return (
     <div className='flex justify-center md:justify-start items-start gap-8 mt-3 rounded-lg w-full h-full'>
       <div className="flex flex-wrap justify-center md:justify-start items-start gap-8 rounded-lg w-full h-full overflow-scroll" onScroll={handleScroll}>

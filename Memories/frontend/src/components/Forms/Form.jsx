@@ -23,7 +23,7 @@ const Form = () => {
   const [show, setShow] = useState(false);
   const [isloding, SetIsloding] = useState(false);
   const [formDatas, setFormData] = useState({
-    name:userData?.name||userData?.firstName+' '+userData?.lastName, title:'',message:'',tags:[],owner:userData?._id
+    name:userData?.name, title:'',message:'',tags:[],owner:userData?._id
   })
   const [inputValue, setInputValue] = useState('');
   
@@ -153,7 +153,7 @@ const Form = () => {
         setShow(false);
         SetIsloding(false);
         setProgress('');
-        setFormData({name:userData.name||userData.firstName+' '+userData.lastName,title:'',message:'',tags:[],owner:userData._id})
+        setFormData({name:userData?.name, title:'',message:'',tags:[],owner:userData?._id})
       }
     }
   };
@@ -165,12 +165,12 @@ const Form = () => {
     setShow(false);
     SetIsloding(false);
     setProgress('');
-    setFormData({name:userData.name||userData.firstName+' '+userData.lastName,title:'',message:'',tags:[],owner:userData._id})
+    setFormData({name:userData?.name, title:'',message:'',tags:[],owner:userData?._id})
 }
 
   return (
     <>
-      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 shadow-xl p-3 rounded-md w-65 lg:w-70 xl:w-75 max-w-130 h-2/3'>
+      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-[rgba(84,84,84,0.5)] shadow-xl backdrop-blur-5xl p-3 rounded-md w-65 lg:w-70 xl:w-75 max-w-130 h-2/3'>
         <h2 className='font-semibold text-2xl'>Create a Memory</h2>
         <form className="flex flex-col justify-center items-center gap-3 px-2 w-full text-white">
           <div className="relative w-full">

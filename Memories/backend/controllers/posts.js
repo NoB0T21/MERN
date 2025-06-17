@@ -5,6 +5,7 @@ const uuid = require('uuid-v4');
 const upload =  multer({ storage: multer.memoryStorage() });
 const googleServices = require('../services/google.user.service')
 const userServices = require('../services/user.service');
+const mime = require('mime-types');
 
 function serverError(res){
     return res.status(500).json({
@@ -127,10 +128,11 @@ module.exports.showPost = async (req, res) => {
     const ids = req.body;
     const skip = (page - 1) * limit;
     try {
-        const userPosts = await postServices.getPost({ skip, limit,ids });
-        if (!userPosts || userPosts.length === 0) {
+        const userPosts1 = await postServices.getPost({ skip, limit,ids });
+        if (!userPosts1 || userPosts1.length === 0) {
             return res.status(204).json({message: 'Post not Found'})
         }
+        const userPosts = [...userPosts1].sort(() => Math.random() - 0.5);
         res.status(200).json(userPosts); // ✅ Use 200 OK
     } catch (error) {
         return serverError(res)
@@ -153,7 +155,7 @@ module.exports.updatePost =async (req, res) => {
         if(!post){
             return res.status(204).json({message:'Post Not Found'})
         }
-        return res.status(201).json({
+        return res.status(200).json({
             message: "Post updated",
             success:true
         })
@@ -189,6 +191,43 @@ module.exports.deleteFile = async(req,res) => {
     };
 };
 
+module.exports.downloadFile = async(req,res) => {
+    const userId = req.params.id;
+    if (!userId) {
+        return notFound(res);
+    }
+    let file = await postServices.getFiles({userId});
+    if (Array.isArray(file)) file = file[0];
+    if (!file) {
+        return res.status(204).json({message:'Post Not Found'})
+    }
+    try {
+        const {data, error } = await supabase
+        .storage
+        .from('images')
+        .download(file.path)
+        if (error || !data) {
+            console.error('Supabase error:', error);
+            return serverError(res);
+        }
+        let buffer;
+        if (data instanceof Buffer || data instanceof Uint8Array) {
+        buffer = Buffer.from(data);
+        } else if (typeof data.arrayBuffer === 'function') {
+        // If data is a Blob, convert to Buffer
+        buffer = Buffer.from(await data.arrayBuffer());
+        } else {
+        return serverError(res);
+        }
+        const mimeType = mime.lookup(file.originalname) || 'application/octet-stream';
+        res.setHeader('Content-Disposition', `attachment; filename="${file.originalname}"`);
+        res.setHeader('Content-Type', mimeType);
+        return res.send(buffer);
+    } catch (error) {
+        return serverError(res)
+    };
+};
+
 module.exports.showFile = async (req, res) => {
     const skip = Number(req.query.skip) || 0 ;
     const limit =  Number(req.query.limit) || 4;
@@ -198,6 +237,7 @@ module.exports.showFile = async (req, res) => {
             return res.status(204).json({message: 'Post not Found'})
         }
         const userPosts = [...userPostss].sort(() => Math.random() - 0.5);
+        
         return res.status(200).json(userPosts); // ✅ Use 200 OK
     } catch (error) {
         return serverError(res)
@@ -253,7 +293,10 @@ module.exports.getPostById = async(req,res) => {
 };
 
 module.exports.getPostsBySearch = async(req,res) => {
-    const {searchQuery,tags} = req.query
+    let {searchQuery,tags} = req.query
+    if(tags){
+        searchQuery = 'none'
+    }
     try {
         const title = new RegExp(searchQuery, 'i')
         const Posts = await postServices.getpostsBySearch({title,tags});
@@ -261,9 +304,9 @@ module.exports.getPostsBySearch = async(req,res) => {
         const googlefollowing = await googleServices.findUserbyName({title});
         const combined = [...following, ...googlefollowing];
         const profile = combined.sort((a, b) =>
-            a.name.split(' ')[0].localeCompare(b.name.split(' ')[0])
-        );
-        console.log(profile)
+                a.name.split(' ')[0].localeCompare(b.name.split(' ')[0])
+            )
+            .slice(0, 5);
         if(!Posts){
             return res.status(204).json({message:'Post Not Found'})
         }

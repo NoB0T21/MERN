@@ -20,7 +20,6 @@ module.exports.createGoogleUser = async({email,name,picture,sub}) => {
 module.exports.getGoogleUser = async({email}) => {
     try {
         const googleuser = await userModel.findOne({email});
-        if(!googleuser)throw new Error("Require all Fields");
         return googleuser;
     } catch (error) {
     }
@@ -29,7 +28,6 @@ module.exports.getGoogleUser = async({email}) => {
 module.exports.getGoogleUsersub = async({sub}) => {
     try {
         const googleuser = await userModel.findOne({sub});
-        if(!googleuser) throw new Error("require field")
         return googleuser;
     } catch (error) {
         throw new Error(error)
@@ -39,7 +37,6 @@ module.exports.getGoogleUsersub = async({sub}) => {
 module.exports.getGoogleUsers = async({userId}) => {
     try {
         const googleuser = await userModel.findOne({_id: userId});
-        if(!googleuser) throw new Error("require field")
         return googleuser;
     } catch (error) {
         throw new Error(error)

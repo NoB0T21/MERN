@@ -11,6 +11,7 @@ router.get('/like/:id',googleAuthMiddleware,postController.likePost)
 router.post('/users/byIds',googleAuthMiddleware, postController.showPost)
 router.patch('/update/:id',googleAuthMiddleware,postController.updatePost)
 router.post('/delete/:id',googleAuthMiddleware,postController.deleteFile);
+router.get('/download/:id',googleAuthMiddleware,postController.downloadFile);
 router.get('/home',postController.showFile)
 router.get('/profile/:id',googleAuthMiddleware,postController.getuserPosts)
 router.get('/post/:id',googleAuthMiddleware,postController.getPostByid)

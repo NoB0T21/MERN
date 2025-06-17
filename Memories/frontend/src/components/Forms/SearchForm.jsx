@@ -44,9 +44,9 @@ const SearchForm = () => {
     e.preventDefault();
     const currentTags = [...formDatas.tags]; // ensure current value
     const tagString = currentTags.join(',');
-    let url = `/explore/search?searchQuery=${formDatas.title || 'none'}`;
+    let url = `/explore/search?searchQuery=${formDatas.title}`;
     if (tagString) {
-      url += `&tags=${encodeURIComponent(tagString)||'none'}`;
+      url += `&tags=${encodeURIComponent(tagString)}`;
     }
     const data = await api.get(url);
     setSearchData(data.data)
@@ -54,7 +54,7 @@ const SearchForm = () => {
   }
   return (
     <>
-      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-zinc-600 shadow-xl p-3 rounded-md w-65 lg:w-70 xl:w-75 max-w-130 h-80 max-h-70'>
+      <div className='hidden md:flex flex-col justify-center items-center gap-2 bg-[rgba(84,84,84,0.6)] shadow-xl backdrop-blur-5xl p-3 rounded-md w-65 lg:w-70 xl:w-75 max-w-130 h-80 max-h-70'>
         <h2 className='font-semibold text-2xl'>Search a Memory</h2>
         <form onSubmit={handleSubmit} className="flex flex-col justify-center items-center gap-3 px-2 w-full text-white">
           <div className="relative w-full">

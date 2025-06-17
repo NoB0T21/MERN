@@ -11,11 +11,11 @@ const Edit = () => {
   const navigate = useNavigate();
   const {setPostData} = useContext(DataContext);
   const [post, setPost] = useState([]);
-  const [creator, setCreator] = useState(`${post.creator}`);
-  const [title, setTitle] = useState(`${post.title}`);
-  const [message, setMessage] = useState(`${post.message}`);
-  const [tags, setTags] = useState(`${post.tags}`);
+  const [formDatas, setFormData] = useState({
+    name:'', title:'',message:'',tags:[]
+  })
   const [progress, setProgress] = useState(0);
+  const [inputValue, setInputValue] = useState('');
 
   const error1 = (err) => toast.error(`${err}`, {
     position: "top-right",
@@ -27,6 +27,33 @@ const Edit = () => {
     progress: undefined,
     theme: "dark",
   });
+
+  const handleInputChange = (e) => {setInputValue(e.target.value);};
+
+  const handleInputKeyDown = (e) => {
+      if (e.key === 'Enter' || e.key === ',' && inputValue.trim() !== '') {
+        const newTags = inputValue
+      .split(',')
+      .map(tag => tag.trim())
+      .filter(tag => tag.length > 0)
+      .map(tag => (tag.startsWith('#') ? tag : `#${tag}`))
+      .filter(tag => !formDatas.tags.includes(tag));
+      
+      if (newTags.length > 0) {
+        setFormData(prev => ({
+          ...prev,
+          tags: [...prev.tags, ...newTags],
+        }));
+      }
+        setInputValue('');
+      }
+    };
+  const removeTag = (indexToRemove) => {
+      setFormData((prev) => ({
+        ...prev,
+        tags: prev.tags.filter((_, index) => index !== indexToRemove),
+      }));
+    };
 
   const getIdFromUrl = () => {
     const path = window.location.pathname; // Example: /profile/123
@@ -46,25 +73,22 @@ const Edit = () => {
       }
     );
     setPost(data);
-
-    setCreator(`${data.creator}`);
-    setTitle(`${data.title}`);
-    setMessage(`${data.message}`);
-    setTags(`${data.tags}`);
+    setFormData({name:`${data.creator}`, title:`${data.title}`,message:`${data.message}`,tags:data.tags})
   };
 
   const uploadFiles = async (e) => {
     e.preventDefault();
     setProgress(10)
-    const formData =
-    {"creator": creator,
-    "title": title,
-    "message": message,
-    "tags": tags};
-  
+    const formData = {
+      'creator': formDatas.name,
+      'title': formDatas.title,
+      'message': formDatas.message,
+      'tags': formDatas.tags,
+    }
+    
     try {
       const token = localStorage.getItem('token');
-      const response = api.patch(`${import.meta.env.VITE_BASE_URL}/update/${post._id}`,
+      const response = await api.patch(`${import.meta.env.VITE_BASE_URL}/update/${post._id}`,
         formData,
           {
           headers: {
@@ -81,26 +105,22 @@ const Edit = () => {
       }
       setProgress(70)
       const {getData}=useData(setPostData);
-      await setTimeout(() => {
-          getData();
-          getData();
-          setProgress(100);
-          navigate('/', { replace: true });
-        },1000);
-        return () => clearTimeout(timeout);
+      setTimeout(() => {
+        getData();
+        setProgress(100);
+        navigate('/user/profile', { replace: true });
+      }, 1000);
     } catch (error) {
       error1(error.message);
     }
     
-    setCreator('');
-    setTitle('');
-    setMessage('');
-    setTags('');
+    setFormData({name:`${post.creator}`, title:`${post.title}`,message:`${post.message}`,tags:post.tags})
   };
 
   const clear = (e) => {
     e.preventDefault();
     navigate('/', { replace: true });
+    setFormData({name:`${post.creator}`, title:`${post.title}`,message:`${post.message}`,tags:post.tags})
 }
 
   useEffect(() => {
@@ -117,17 +137,52 @@ const Edit = () => {
         />
       </div>
     </div>
-    <div className='flex justify-center items-center gap-2w-screen h-[90vh] overflow-y-auto'>
-      <div className='flex flex-col justify-center items-center gap-3 bg-zinc-600 m-1 md:m-5 mr-0 p-3 rounded-md md:w-1/2 w2/3'>
+    <div className='flex items-start gap-2 w-full h-[90vh] overflow-y-auto'>
+      <div className='flex flex-col justify-center items-center gap-3 bg-zinc-600 m-1 md:m-5 mr-0 p-3 rounded-md'>
       <h2 className='mb-3 font-semibold text-2xl'>Update Memory</h2>
       <div className='relative flex flex-col justify-start bg-zinc-700 mt-5 rounded-md w-60 md:w-auto md:max-w-100 h-auto overflow-clip'>
         <img className='static bg-black opacity-70 rounded-md h-65 object-cover' src={post.ImageUrl} />
       </div>
       <form className="flex flex-col justify-center items-center gap-3 p-3 w-full text-white">
-          <input onChange={(e) => {setCreator(e.target.value)}} value={creator} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="creator" placeholder="Creator"/>
-          <input onChange={(e) => {setTitle(e.target.value)}} value={title} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="title" placeholder="Title"/>
-          <input onChange={(e) => {setMessage(e.target.value)}} value={message} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="message" placeholder="Message"/>
-          <input onChange={(e) => {setTags(e.target.value)}} value={tags} className="bg-zinc-800 mx-[10px] px-4 py-3 rounded-md outline-none w-[97%]" type="text" name="tags" placeholder="Tags"/>
+          <div className="relative w-full">
+            <input onChange={(e) => {setFormData({...formDatas, title: e.target.value})}} value={formDatas.title} required autoComplete="off"
+              className="peer bg-zinc-800 p-2 border border-zinc-800 focus:border-indigo-500 rounded-md outline-none w-[97%] h-10 text-white transition-all duration-200" type="text"/>
+            <label className="left-4 absolute bg-zinc-800 px-1 border border-zinc-800 peer-focus:border-indigo-500 rounded-sm text-gray-400 text-md peer-focus:text-[#fff] peer-valid:text-[#fff] scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-2 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+              <span>Title</span>
+            </label>
+          </div>
+          <div className="relative w-full">
+            <textarea onChange={(e) => {setFormData({...formDatas, message: e.target.value})}} value={formDatas.message} required autoComplete="off"
+              className="peer bg-zinc-800 p-2 border border-zinc-800 focus:border-indigo-500 rounded-md outline-none w-[97%] h-10 text-white transition-all duration-200" type="text"/>
+            <label className="left-4 absolute bg-zinc-800 px-1 border border-zinc-800 peer-focus:border-indigo-500 rounded-sm text-gray-400 text-md peer-focus:text-[#fff] peer-valid:text-[#fff] scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-2 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+              <span>Message</span>
+            </label>
+          </div>
+          <div className="relative w-full">
+            <input onKeyDown={handleInputKeyDown} onChange={(e) => {handleInputChange(e)}} value={inputValue} required
+              className="peer bg-zinc-800 p-2 border border-zinc-800 focus:border-indigo-500 rounded-md outline-none w-[97%] h-10 text-white transition-all duration-200" type="text"/>
+              {formDatas.tags?.length > 0 && 
+              <>
+                <div className="flex flex-wrap gap-2 mt-2 w-full h-20 overflow-auto">
+                  {formDatas.tags.map((tag, index) => (
+                    <span key={index} className="flex items-center gap-1 bg-zinc-800 px-2 py-1 rounded-full h-8 text-white text-sm">
+                      {tag}
+                      <button
+                        type="button"
+                        onClick={() => removeTag(index)}
+                        className="flex justify-center items-center bg-zinc-700 rounded-full w-4 h-4"
+                      >
+                        <span>x</span>
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </>
+              }
+            <label className="top-0 left-4 absolute bg-zinc-800 px-1 border border-zinc-800 peer-focus:border-indigo-500 rounded-sm text-gray-400 text-md peer-focus:text-[#fff] peer-valid:text-[#fff] scale-100 peer-focus:scale-75 peer-valid:scale-75 transition-all translate-y-2 peer-focus:-translate-y-2 peer-valid:-translate-y-2 duration-200 pointer-events-none transform">
+              <span>Tags</span>
+            </label>
+          </div>
           <button onClick={uploadFiles} className="flex justify-center items-center gap-2 bg-indigo-500 hover:bg-indigo-700 mt-3 p-2 rounded-md w-full" type="submit" value="Upload">
             <EditIcon/>
             <h1 className='font-semibold text-[1.2rem]'>Edit Post</h1>

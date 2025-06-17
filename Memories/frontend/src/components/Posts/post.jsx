@@ -1,17 +1,19 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {api} from '../../utils/api.js';
 import { DataContext } from '../../context/DataProvider';
 import { Like, LikeFill, Close } from '../Icons/Icons.jsx';
-import useData from '../../utils/api';
 import SigninAlert from '../SigninAlert.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const post = (props) => {
   const navigate = useNavigate();
-  const {setPostData,userData,setUserData,setHomePost} = useContext(DataContext);
+  const {userData,setUserData,setHomePost} = useContext(DataContext);
   const [progress, setProgress] = useState(0);
   const [show, setShow] = useState(false);
-
+  const [like, setLike ] = useState([])
+  useEffect(()=> {
+    setLike(props.data.likecount)
+  },[])
   const likePost = async () => {
     const token = localStorage.getItem('token');
     if(!token){
@@ -27,15 +29,18 @@ const post = (props) => {
       }
     );
     if(data.status === 200) {
-      const user = await api.get(`/profile/${props.data._id}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        withCredentials: true,
+      const userId = userData?._id || userData?.id;
+      const currentLikes = Array.isArray(like) ? like : [];
+
+      const index = currentLikes.indexOf(userId);
+      let updatedLikes;
+
+      if (index === -1) {
+        updatedLikes = [...currentLikes, userId]; // Add like
+      } else {
+        updatedLikes = currentLikes.filter(id => id !== userId); // Remove like
       }
-    );
-    setHomePost(user.data)
+      setLike(updatedLikes);
     }
   }
 
@@ -74,13 +79,13 @@ const post = (props) => {
             />
         </div>
       </div>
-      <div className='relative flex flex-col justify-start bg-zinc-700 rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
+      <div className='relative flex flex-col justify-start bg-[rgba(84,84,84,0.6)] md:bg-[rgba(84,84,84,0.4)] backdrop-blur-5xl rounded-md w-85 md:w-80 max-w-90 h-auto overflow-clip'>
         <div className='flex flex-col'>
           <img onClick={()=>{navigate(`${'/post/'+props.data._id}`, { replace: true });}} className='static bg-black opacity-70 rounded-md h-65 object-cover' src={props.data.ImageUrl} />
-        <div className='top-2 left-5 absolute flex flex-col justify-center items-start text-white'>
-          <div className='font-bold text-gray-200'>{props.data.creator}</div>
-          <div>{props.data.createdAt}</div>
-        </div>
+          <div className='top-2 left-5 absolute flex flex-col justify-center items-start text-white'>
+            <div className='font-bold text-gray-200'>{props.data.creator}</div>
+            <div>{props.data.createdAt}</div>
+          </div>
         <div className='top-2 right-1 absolute text-white'>
           <div className='px-2 py-1'>
             {userData._id===props.data.owner ? 
@@ -103,8 +108,8 @@ const post = (props) => {
         </div>
         <div className='static flex justify-between px-2 py-3'>
           <button onClick={() =>likePost()} className="flex items-center gap-1">
-            {props.data.likecount?.includes(userData?._id) ? < LikeFill/> : < Like/>}
-            <span>{props.data.likecount?.length}</span>
+            {like?.includes(userData?._id) ? < LikeFill/> : < Like/>}
+            <span>{like?.length}</span>
           </button>
         </div>
       </div>
