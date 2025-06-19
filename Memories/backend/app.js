@@ -13,7 +13,7 @@ const userRouter = require('./routes/user.routes')
 
 
 app.use(cors(
-  {origin: 'http://localhost:5173', 
+  {origin: 'https://memories-lovat-one.vercel.app', 
   credentials: true,
 exposedHeaders: ['Content-Disposition']}
 ))

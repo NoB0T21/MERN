@@ -26,10 +26,10 @@ module.exports.createusers = async (req,res) => {
     try{
             const existingusers = await googleUserServices.getGoogleUser({email})
             const existinguser1 = await userServices.findUser({email})
-            if(existingusers === 'null' && existinguser1 === 'null' ){
+            if(existingusers || existinguser1 ){
                 return res.status(200).json({
                     message: "User already exists",
-                    success:true
+                    success:false
                 });
             }
         }catch(error){return res.status(401).json({ error: 'No access token provided' });}
@@ -140,7 +140,6 @@ module.exports.loginusers = async (req,res) => {
 module.exports.tokenUser = async (req,res) => {
     try {
         const token = req.cookies.token;
-        console.log(token)
         if (!token) {
             return res.status(500).json({ error: 'Token not found' });
         }

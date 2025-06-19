@@ -14,6 +14,7 @@ const AuthForm = () => {
     const [isLoding, setIsLoding] = useState(false);
     const [show, setShow] = useState(false);
     const [pass, setPass] = useState('');
+    const [msg, setMsg] = useState('');
     const [form, setForm] = useState(false);
     const [errormsg, setError] = useState({})
     const [formData, setFormData] = useState({
@@ -55,6 +56,8 @@ const AuthForm = () => {
          try {
              const user = await api.post(isSignin ? '/user/signin' : '/user/signup',isSignin ? formData1 : formData,{withCredentials: true})
              if(user.data.success === false){
+                setMsg(user.data?.message)
+                setIsLoding(false);
                 return null
              }
              const responsre = await api.get(`${import.meta.env.VITE_BASE_URL}/user/token`,{withCredentials: true});
@@ -127,6 +130,7 @@ const AuthForm = () => {
             </div>
             </>}
             <div className='flex w-full'>
+                {msg ? <p className='text-red-600 text-md'>{msg}</p>:''}
                 <button type='submit' disabled={ isLoding||(!isSignin && (pass === '' || pass == "false")||(isSignin && (!form)))} className='items-center bg-indigo-500 hover:bg-indigo-600 mt-3 w-full h-10 transition-all ease-in-out'>{!isLoding&& (isSignin ? 'Sign In' : 'Sign Up')}{isLoding && <PulseLoader color="#fff"/>}</button>
             </div>
         </form>
